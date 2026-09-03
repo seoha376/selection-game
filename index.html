@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>선택 게임</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="cover-screen" class="cover-screen">
+        <p class="eyebrow">3문항 리더십 선택 게임</p>
+        <h1>세 번의 선택으로 보는 나의 리더십 방향</h1>
+        <p class="cover-copy">상황마다 더 끌리는 선택을 고르면 마지막에 나의 리더십 유형이 나타납니다.</p>
+        <button id="start-button" class="primary-button" type="button">시작하기</button>
+      </section>
+
+      <section id="game-screen" class="game-screen" hidden>
+        <div class="top-bar">
+          <button id="back-button" class="icon-button" type="button" aria-label="이전 질문으로 돌아가기">←</button>
+          <p id="progress-text" class="progress-text"></p>
+        </div>
+        <section id="question-card" class="question" aria-label="선택 질문"></section>
+        <button id="show-result-button" class="primary-button result-button" type="button" hidden>결과보기</button>
+      </section>
+
+      <section id="result-screen" class="result-card" aria-live="polite" hidden>
+        <p id="result-code" class="result-code"></p>
+        <h2 id="result-name"></h2>
+        <p id="result-catchphrase" class="catchphrase"></p>
+        <p id="result-keywords" class="keywords"></p>
+        <div id="result-description" class="description"></div>
+        <button id="reset-button" class="reset-button" type="button">처음으로</button>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
