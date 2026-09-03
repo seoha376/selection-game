@@ -117,6 +117,7 @@ function renderResult() {
 }
 
 function render() {
+  document.body.dataset.screen = state.screen;
   coverScreen.hidden = state.screen !== "cover";
   gameScreen.hidden = state.screen !== "question" && state.screen !== "review";
   resultScreen.hidden = state.screen !== "result";
