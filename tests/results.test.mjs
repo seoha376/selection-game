@@ -33,6 +33,8 @@ for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(RESULT_CONTENT[code].catchphrase, `${code} should have a catchphrase`);
   assert.ok(RESULT_CONTENT[code].keywords, `${code} should have keywords`);
   assert.ok(RESULT_CONTENT[code].description.length >= 2, `${code} should have at least two description sentences`);
+  assert.ok(RESULT_CONTENT[code].culturalNote.includes("김구"), `${code} should connect the result to Kim Gu`);
+  assert.ok(RESULT_CONTENT[code].culturalNote.length >= 70, `${code} should have a richer cultural note`);
 }
 
 assert.throws(() => calculateResult(["A", "A"]), /exactly three/i);

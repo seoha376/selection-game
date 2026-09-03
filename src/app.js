@@ -59,7 +59,7 @@ function renderCover() {
   setScreen(`
     <section class="cover-screen">
       <p class="eyebrow">김구 탄생 150주년 기념 체험</p>
-      <h1>나의 선택으로 보는 리더십 방향</h1>
+      <h1>나의 선택으로<br />리더십 방향</h1>
       <p class="cover-copy">
         백범 김구의 삶에서 떠올릴 수 있는 결정, 사람, 가치, 변화의 감각을 가볍게 체험해보는 행사형 테스트입니다.
       </p>
@@ -137,6 +137,10 @@ function renderResult() {
       <p class="catchphrase">${result.catchphrase}</p>
       <p class="keywords">${result.keywords}</p>
       <div class="description">${description}</div>
+      <div class="cultural-note">
+        <h3>김구 정신으로 읽어보기</h3>
+        <p>${result.culturalNote}</p>
+      </div>
       <button id="reset-button" class="reset-button" type="button">처음으로</button>
     </section>
   `);
