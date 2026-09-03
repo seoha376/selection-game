@@ -77,6 +77,28 @@ export function createGameState() {
   };
 }
 
+export function getPagePath(state) {
+  if (state.screen === "result") {
+    return "#/result";
+  }
+
+  if (state.screen === "question" || state.screen === "review") {
+    return `#/q/${state.currentQuestionIndex + 1}`;
+  }
+
+  return "#/intro";
+}
+
+export function getProgress(state) {
+  const current = state.screen === "cover" ? 0 : state.currentQuestionIndex + 1;
+
+  return {
+    current,
+    total: 3,
+    label: state.screen === "cover" ? "시작 전" : `${current} / 3`,
+  };
+}
+
 export function startGame(state) {
   return {
     ...state,

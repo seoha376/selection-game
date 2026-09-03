@@ -2,6 +2,8 @@ import {
   backToPreviousQuestion,
   calculateResult,
   createGameState,
+  getPagePath,
+  getProgress,
   revealResult,
   selectAnswer as selectGameAnswer,
   startGame,
@@ -38,6 +40,7 @@ const gameScreen = document.querySelector("#game-screen");
 const resultScreen = document.querySelector("#result-screen");
 const startButton = document.querySelector("#start-button");
 const questionCard = document.querySelector("#question-card");
+const progressWrap = document.querySelector(".progress-wrap");
 const progressText = document.querySelector("#progress-text");
 const resultName = document.querySelector("#result-name");
 const resultCode = document.querySelector("#result-code");
@@ -47,6 +50,20 @@ const resultDescription = document.querySelector("#result-description");
 const backButton = document.querySelector("#back-button");
 const showResultButton = document.querySelector("#show-result-button");
 const resetButton = document.querySelector("#reset-button");
+
+function syncRoute(replace = false) {
+  const nextPath = getPagePath(state);
+  if (window.location.hash === nextPath) {
+    return;
+  }
+
+  if (replace) {
+    window.location.replace(nextPath);
+    return;
+  }
+
+  window.location.hash = nextPath;
+}
 
 function renderQuestion() {
   questionCard.innerHTML = "";
@@ -79,8 +96,9 @@ function renderQuestion() {
 }
 
 function renderProgress() {
-  const selectedCount = state.answers.filter(Boolean).length;
-  progressText.textContent = `${selectedCount} / ${questions.length} 선택 완료`;
+  const progress = getProgress(state);
+  progressText.textContent = progress.label;
+  progressWrap.style.setProperty("--progress", `${(progress.current / progress.total) * 100}%`);
 }
 
 function renderResult() {
@@ -117,22 +135,34 @@ function render() {
 
 startButton.addEventListener("click", () => {
   state = startGame(state);
+  syncRoute();
   render();
 });
 
 backButton.addEventListener("click", () => {
   state = backToPreviousQuestion(state);
+  syncRoute();
   render();
 });
 
 showResultButton.addEventListener("click", () => {
   state = revealResult(state);
+  syncRoute();
   render();
 });
 
 resetButton.addEventListener("click", () => {
   state = createGameState();
+  syncRoute();
   render();
 });
 
+window.addEventListener("hashchange", () => {
+  if (window.location.hash === "#/intro" || window.location.hash === "") {
+    state = createGameState();
+    render();
+  }
+});
+
+syncRoute(true);
 render();

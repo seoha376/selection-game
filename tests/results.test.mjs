@@ -3,6 +3,8 @@ import {
   backToPreviousQuestion,
   calculateResult,
   createGameState,
+  getPagePath,
+  getProgress,
   RESULT_CONTENT,
   revealResult,
   selectAnswer,
@@ -39,19 +41,26 @@ assert.throws(() => calculateResult(["A", "C", "A"]), /A or B/i);
 let state = createGameState();
 assert.equal(state.screen, "cover");
 assert.equal(state.currentQuestionIndex, 0);
+assert.equal(getPagePath(state), "#/intro");
 
 state = startGame(state);
 assert.equal(state.screen, "question");
 assert.equal(state.currentQuestionIndex, 0);
+assert.equal(getPagePath(state), "#/q/1");
+assert.deepEqual(getProgress(state), { current: 1, total: 3, label: "1 / 3" });
 
 state = selectAnswer(state, "A");
 assert.deepEqual(state.answers, ["A", null, null]);
 assert.equal(state.currentQuestionIndex, 1);
 assert.equal(state.screen, "question");
+assert.equal(getPagePath(state), "#/q/2");
+assert.deepEqual(getProgress(state), { current: 2, total: 3, label: "2 / 3" });
 
 state = backToPreviousQuestion(state);
 assert.equal(state.currentQuestionIndex, 0);
 assert.equal(state.screen, "question");
+assert.equal(getPagePath(state), "#/q/1");
+assert.deepEqual(getProgress(state), { current: 1, total: 3, label: "1 / 3" });
 
 state = selectAnswer(state, "B");
 state = selectAnswer(state, "A");
@@ -59,9 +68,12 @@ state = selectAnswer(state, "B");
 assert.deepEqual(state.answers, ["B", "A", "B"]);
 assert.equal(state.currentQuestionIndex, 2);
 assert.equal(state.screen, "review");
+assert.equal(getPagePath(state), "#/q/3");
+assert.deepEqual(getProgress(state), { current: 3, total: 3, label: "3 / 3" });
 
 state = revealResult(state);
 assert.equal(state.screen, "result");
+assert.equal(getPagePath(state), "#/result");
 assert.equal(calculateResult(state.answers).code, "PEOPLE");
 
 console.log("All result mapping tests passed.");
