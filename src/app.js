@@ -34,22 +34,7 @@ const questions = [
 ];
 
 let state = createGameState();
-
-const coverScreen = document.querySelector("#cover-screen");
-const gameScreen = document.querySelector("#game-screen");
-const resultScreen = document.querySelector("#result-screen");
-const startButton = document.querySelector("#start-button");
-const questionCard = document.querySelector("#question-card");
-const progressWrap = document.querySelector(".progress-wrap");
-const progressText = document.querySelector("#progress-text");
-const resultName = document.querySelector("#result-name");
-const resultCode = document.querySelector("#result-code");
-const resultCatchphrase = document.querySelector("#result-catchphrase");
-const resultKeywords = document.querySelector("#result-keywords");
-const resultDescription = document.querySelector("#result-description");
-const backButton = document.querySelector("#back-button");
-const showResultButton = document.querySelector("#show-result-button");
-const resetButton = document.querySelector("#reset-button");
+const app = document.querySelector("#app");
 
 function syncRoute(replace = false) {
   const nextPath = getPagePath(state);
@@ -65,98 +50,119 @@ function syncRoute(replace = false) {
   window.location.hash = nextPath;
 }
 
-function renderQuestion() {
-  questionCard.innerHTML = "";
-
-  const question = questions[state.currentQuestionIndex];
-  const questionNumber = document.createElement("p");
-  questionNumber.className = "question-number";
-  questionNumber.textContent = `Q${state.currentQuestionIndex + 1}`;
-
-  const heading = document.createElement("h2");
-  heading.textContent = question.title;
-
-  const options = document.createElement("div");
-  options.className = "options";
-
-  for (const optionCode of ["A", "B"]) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "option-button";
-    button.dataset.selected = state.answers[state.currentQuestionIndex] === optionCode ? "true" : "false";
-    button.textContent = `${optionCode}. ${question.options[optionCode]}`;
-    button.addEventListener("click", () => {
-      state = selectGameAnswer(state, optionCode);
-      render();
-    });
-    options.append(button);
-  }
-
-  questionCard.append(questionNumber, heading, options);
+function setScreen(markup) {
+  app.innerHTML = markup;
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 }
 
-function renderProgress() {
+function renderCover() {
+  setScreen(`
+    <section class="cover-screen">
+      <p class="eyebrow">김구 탄생 150주년 기념 체험</p>
+      <h1>나의 선택으로 보는 리더십 방향</h1>
+      <p class="cover-copy">
+        백범 김구의 삶에서 떠올릴 수 있는 결정, 사람, 가치, 변화의 감각을 가볍게 체험해보는 행사형 테스트입니다.
+      </p>
+      <p class="notice">본 테스트는 의학적·심리학적 진단 도구가 아니며, 행사 참여를 위한 체험 콘텐츠입니다.</p>
+      <button id="start-button" class="primary-button" type="button">시작하기</button>
+    </section>
+  `);
+
+  document.querySelector("#start-button").addEventListener("click", () => {
+    state = startGame(state);
+    syncRoute();
+    render();
+  });
+}
+
+function renderQuestion() {
+  const question = questions[state.currentQuestionIndex];
   const progress = getProgress(state);
-  progressText.textContent = progress.label;
-  progressWrap.style.setProperty("--progress", `${(progress.current / progress.total) * 100}%`);
+  const progressPercent = (progress.current / progress.total) * 100;
+
+  setScreen(`
+    <section class="game-screen">
+      <div class="top-bar">
+        <button id="back-button" class="icon-button" type="button" aria-label="이전 질문으로 돌아가기">←</button>
+        <div class="progress-wrap" style="--progress: ${progressPercent}%" aria-label="진행도">
+          <p class="progress-text">${progress.label}</p>
+        </div>
+      </div>
+      <section class="question" aria-label="선택 질문">
+        <p class="question-number">Q${state.currentQuestionIndex + 1}</p>
+        <h2>${question.title}</h2>
+        <div class="options">
+          <button class="option-button" type="button" data-answer="A">A. ${question.options.A}</button>
+          <button class="option-button" type="button" data-answer="B">B. ${question.options.B}</button>
+        </div>
+      </section>
+      ${state.screen === "review" ? '<button id="show-result-button" class="primary-button result-button" type="button">결과보기</button>' : ""}
+    </section>
+  `);
+
+  const backButton = document.querySelector("#back-button");
+  backButton.disabled = state.currentQuestionIndex === 0;
+  backButton.addEventListener("click", () => {
+    state = backToPreviousQuestion(state);
+    syncRoute();
+    render();
+  });
+
+  document.querySelectorAll(".option-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      state = selectGameAnswer(state, button.dataset.answer);
+      syncRoute();
+      render();
+    });
+  });
+
+  const showResultButton = document.querySelector("#show-result-button");
+  if (showResultButton) {
+    showResultButton.addEventListener("click", () => {
+      state = revealResult(state);
+      syncRoute();
+      render();
+    });
+  }
 }
 
 function renderResult() {
   const result = calculateResult(state.answers);
-  resultName.textContent = result.name;
-  resultCode.textContent = result.code;
-  resultCatchphrase.textContent = result.catchphrase;
-  resultKeywords.textContent = result.keywords;
-  resultDescription.innerHTML = "";
+  const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
 
-  for (const sentence of result.description) {
-    const paragraph = document.createElement("p");
-    paragraph.textContent = sentence;
-    resultDescription.append(paragraph);
-  }
+  setScreen(`
+    <section class="result-card">
+      <p class="result-code">${result.code}</p>
+      <h2>${result.name}</h2>
+      <p class="catchphrase">${result.catchphrase}</p>
+      <p class="keywords">${result.keywords}</p>
+      <div class="description">${description}</div>
+      <button id="reset-button" class="reset-button" type="button">처음으로</button>
+    </section>
+  `);
+
+  document.querySelector("#reset-button").addEventListener("click", () => {
+    state = createGameState();
+    syncRoute();
+    render();
+  });
 }
 
 function render() {
   document.body.dataset.screen = state.screen;
-  coverScreen.hidden = state.screen !== "cover";
-  gameScreen.hidden = state.screen !== "question" && state.screen !== "review";
-  resultScreen.hidden = state.screen !== "result";
-  renderProgress();
 
-  if (state.screen === "question" || state.screen === "review") {
-    renderQuestion();
-    backButton.disabled = state.currentQuestionIndex === 0;
-    showResultButton.hidden = state.screen !== "review";
+  if (state.screen === "cover") {
+    renderCover();
+    return;
   }
 
   if (state.screen === "result") {
     renderResult();
+    return;
   }
+
+  renderQuestion();
 }
-
-startButton.addEventListener("click", () => {
-  state = startGame(state);
-  syncRoute();
-  render();
-});
-
-backButton.addEventListener("click", () => {
-  state = backToPreviousQuestion(state);
-  syncRoute();
-  render();
-});
-
-showResultButton.addEventListener("click", () => {
-  state = revealResult(state);
-  syncRoute();
-  render();
-});
-
-resetButton.addEventListener("click", () => {
-  state = createGameState();
-  syncRoute();
-  render();
-});
 
 window.addEventListener("hashchange", () => {
   if (window.location.hash === "#/intro" || window.location.hash === "") {

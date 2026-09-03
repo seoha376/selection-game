@@ -46,12 +46,7 @@ button {
 .cover-screen,
 .game-screen,
 .result-card {
-  grid-area: 1 / 1;
   animation: screen-in 240ms ease both;
-}
-
-[hidden] {
-  display: none !important;
 }
 
 .cover-screen {
