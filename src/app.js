@@ -4,34 +4,11 @@ import {
   createGameState,
   getPagePath,
   getProgress,
+  QUESTIONS,
   revealResult,
   selectAnswer as selectGameAnswer,
   startGame,
 } from "./results.js";
-
-const questions = [
-  {
-    title: "프로젝트가 늦어지고 있을 때",
-    options: {
-      A: "빠르게 방향을 정하고 실행한다",
-      B: "구성원 의견을 다시 모은다",
-    },
-  },
-  {
-    title: "기존 방식으로도 해결 가능하지만 새로운 방법이 떠올랐을 때",
-    options: {
-      A: "검증된 방식을 선택한다",
-      B: "새로운 방식을 시도한다",
-    },
-  },
-  {
-    title: "팀에서 한 사람의 성과가 매우 뛰어날 때",
-    options: {
-      A: "뛰어난 개인에게 더 큰 역할을 맡긴다",
-      B: "팀 전체가 함께 성장할 방법을 만든다",
-    },
-  },
-];
 
 let state = createGameState();
 const app = document.querySelector("#app");
@@ -57,7 +34,7 @@ function setScreen(markup) {
 
 function renderCover() {
   setScreen(`
-    <section class="cover-screen">
+    <section class="cover-screen paper-panel">
       <p class="eyebrow">김구 탄생 150주년 기념 체험</p>
       <h1>나의 선택으로<br />리더십 방향</h1>
       <p class="cover-copy">
@@ -76,7 +53,7 @@ function renderCover() {
 }
 
 function renderQuestion() {
-  const question = questions[state.currentQuestionIndex];
+  const question = QUESTIONS[state.currentQuestionIndex];
   const progress = getProgress(state);
   const progressPercent = (progress.current / progress.total) * 100;
 
@@ -88,12 +65,12 @@ function renderQuestion() {
           <p class="progress-text">${progress.label}</p>
         </div>
       </div>
-      <section class="question" aria-label="선택 질문">
+      <section class="question paper-panel" aria-label="선택 질문">
         <p class="question-number">Q${state.currentQuestionIndex + 1}</p>
         <h2>${question.title}</h2>
         <div class="options">
-          <button class="option-button" type="button" data-answer="A">A. ${question.options.A}</button>
-          <button class="option-button" type="button" data-answer="B">B. ${question.options.B}</button>
+          <button class="option-button" type="button" data-answer="A">A. ${question.options.A.text}</button>
+          <button class="option-button" type="button" data-answer="B">B. ${question.options.B.text}</button>
         </div>
       </section>
       ${state.screen === "review" ? '<button id="show-result-button" class="primary-button result-button" type="button">결과보기</button>' : ""}
@@ -129,18 +106,33 @@ function renderQuestion() {
 function renderResult() {
   const result = calculateResult(state.answers);
   const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
+  const scoreSummary = result.scoreSummary
+    .map((entry) => `<li>${entry.name} <strong>${entry.score}</strong></li>`)
+    .join("");
+  const expandedSections = result.expandedSections
+    .map(
+      (section) => `
+        <section class="expanded-section">
+          <h3>${section.title}</h3>
+          <p>${section.body}</p>
+        </section>
+      `,
+    )
+    .join("");
 
   setScreen(`
-    <section class="result-card">
+    <section class="result-card paper-panel" data-result="${result.code}">
       <p class="result-code">${result.code}</p>
       <h2>${result.name}</h2>
       <p class="catchphrase">${result.catchphrase}</p>
       <p class="keywords">${result.keywords}</p>
-      <div class="description">${description}</div>
-      <div class="cultural-note">
-        <h3>김구 정신으로 읽어보기</h3>
-        <p>${result.culturalNote}</p>
+      <div class="reason-box">
+        <h3>이 결과가 나온 이유</h3>
+        <p>${result.reasonSummary}</p>
+        <ul>${scoreSummary}</ul>
       </div>
+      <div class="description">${description}</div>
+      <div class="expanded-results">${expandedSections}</div>
       <button id="reset-button" class="reset-button" type="button">처음으로</button>
     </section>
   `);
