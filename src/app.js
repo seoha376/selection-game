@@ -13,6 +13,25 @@ import {
 let state = createGameState();
 const app = document.querySelector("#app");
 
+const RESULT_VISUALS = {
+  EXECUTION: {
+    symbol: "動",
+    lead: "뜻을 움직임으로 바꾸는 사람",
+  },
+  PEOPLE: {
+    symbol: "和",
+    lead: "서로 다른 마음을 한 방향으로 잇는 사람",
+  },
+  VALUE: {
+    symbol: "志",
+    lead: "오래 남을 기준을 먼저 세우는 사람",
+  },
+  CHANGE: {
+    symbol: "新",
+    lead: "익숙한 답 너머의 가능성을 여는 사람",
+  },
+};
+
 function syncRoute(replace = false) {
   const nextPath = getPagePath(state);
   if (window.location.hash === nextPath) {
@@ -105,9 +124,22 @@ function renderQuestion() {
 
 function renderResult() {
   const result = calculateResult(state.answers);
+  const visual = RESULT_VISUALS[result.code];
   const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
   const scoreSummary = result.scoreSummary
-    .map((entry) => `<li>${entry.name} <strong>${entry.score}</strong></li>`)
+    .map(
+      (entry) => `
+        <li>
+          <div class="score-row">
+            <span>${entry.name}</span>
+            <strong>${entry.score}</strong>
+          </div>
+          <div class="score-bar" aria-hidden="true">
+            <span class="score-bar-fill" style="width: ${(entry.score / 8) * 100}%"></span>
+          </div>
+        </li>
+      `,
+    )
     .join("");
   const expandedSections = result.expandedSections
     .map(
@@ -122,14 +154,20 @@ function renderResult() {
 
   setScreen(`
     <section class="result-card paper-panel" data-result="${result.code}">
-      <p class="result-code">${result.code}</p>
-      <h2>${result.name}</h2>
-      <p class="catchphrase">${result.catchphrase}</p>
-      <p class="keywords">${result.keywords}</p>
+      <div class="result-hero">
+        <div class="result-symbol" aria-hidden="true">${visual.symbol}</div>
+        <div class="result-identity">
+          <p class="result-code">${result.code}</p>
+          <h2>${result.name}</h2>
+          <p class="result-lead">${visual.lead}</p>
+          <p class="catchphrase">${result.catchphrase}</p>
+          <p class="keywords">${result.keywords}</p>
+        </div>
+      </div>
       <div class="reason-box">
         <h3>이 결과가 나온 이유</h3>
         <p>${result.reasonSummary}</p>
-        <ul>${scoreSummary}</ul>
+        <ul class="score-bars">${scoreSummary}</ul>
       </div>
       <div class="description">${description}</div>
       <div class="expanded-results">${expandedSections}</div>
