@@ -8,11 +8,15 @@ assert.ok(appSource.includes('data-result="${result.code}"'), "Result card shoul
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
 assert.ok(appSource.includes("result-symbol"), "Result screen should show a visible type symbol");
 assert.ok(appSource.includes("score-bars"), "Result screen should visualize score distribution");
+assert.ok(appSource.includes("stats-box"), "Result screen should show participation statistics");
+assert.ok(appSource.includes("recordResultAndLoadStats"), "Result screen should load Supabase-backed statistics");
 
 for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(styles.includes(`.result-card[data-result="${code}"]`), `${code} should have a result-specific theme`);
 }
 assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
 assert.ok(styles.includes(".score-bar-fill"), "Score bars should be styled");
+assert.ok(styles.includes(".stats-box"), "Participation statistics should be styled");
+assert.ok(styles.includes(".result-stats-bars"), "Result distribution statistics should be styled");
 
 console.log("All UI theme tests passed.");

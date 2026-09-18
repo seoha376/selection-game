@@ -9,9 +9,11 @@ import {
   selectAnswer as selectGameAnswer,
   startGame,
 } from "./results.js";
+import { createAnalyticsClient } from "./analytics.js";
 
 let state = createGameState();
 const app = document.querySelector("#app");
+const analytics = createAnalyticsClient();
 
 const RESULT_VISUALS = {
   EXECUTION: {
@@ -51,6 +53,62 @@ function setScreen(markup) {
   window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 }
 
+function track(promise) {
+  promise.catch(() => {
+    // Analytics should never interrupt the event experience.
+  });
+}
+
+function renderStats(stats, result) {
+  if (!stats || stats.total === 0) {
+    return `
+      <p class="stats-empty">아직 집계된 참여 통계가 없습니다. 당신의 결과가 첫 기록이 될 수 있어요.</p>
+    `;
+  }
+
+  const bars = stats.distribution
+    .map(
+      (entry) => `
+        <li>
+          <div class="stats-row">
+            <span>${entry.name}</span>
+            <strong>${entry.count}명 · ${entry.percent}%</strong>
+          </div>
+          <div class="stats-bar" aria-hidden="true">
+            <span class="stats-bar-fill" style="width: ${entry.percent}%"></span>
+          </div>
+        </li>
+      `,
+    )
+    .join("");
+
+  return `
+    <div class="stats-highlight">
+      <p><strong>${stats.total}명</strong>이 지금까지 참여했어요.</p>
+      <p>당신과 같은 <strong>${result.name}</strong>은 <strong>${stats.sameResult}명</strong>입니다.</p>
+    </div>
+    <ul class="result-stats-bars">${bars}</ul>
+  `;
+}
+
+function updateStatsPanel(stats, result) {
+  const panel = document.querySelector("#stats-panel");
+  if (!panel) {
+    return;
+  }
+
+  panel.innerHTML = renderStats(stats, result);
+}
+
+function showStatsError() {
+  const panel = document.querySelector("#stats-panel");
+  if (!panel) {
+    return;
+  }
+
+  panel.innerHTML = `<p class="stats-empty">참여 통계는 잠시 불러오지 못했어요. 결과 내용은 정상적으로 확인할 수 있습니다.</p>`;
+}
+
 function renderCover() {
   setScreen(`
     <section class="cover-screen paper-panel">
@@ -59,13 +117,15 @@ function renderCover() {
       <p class="cover-copy">
         백범 김구의 삶에서 떠올릴 수 있는 결정, 사람, 가치, 변화의 감각을 가볍게 체험해보는 행사형 테스트입니다.
       </p>
-      <p class="notice">본 테스트는 의학적·심리학적 진단 도구가 아니며, 행사 참여를 위한 체험 콘텐츠입니다.</p>
+      <p class="notice">본 테스트는 의학적·심리학적 진단 도구가 아니며, 행사 참여를 위한 체험 콘텐츠입니다. 참여 흐름과 결과는 익명 통계로 저장될 수 있습니다.</p>
       <button id="start-button" class="primary-button" type="button">시작하기</button>
     </section>
   `);
 
   document.querySelector("#start-button").addEventListener("click", () => {
     state = startGame(state);
+    analytics.markStarted();
+    track(analytics.recordSessionEvent("start"));
     syncRoute();
     render();
   });
@@ -75,6 +135,7 @@ function renderQuestion() {
   const question = QUESTIONS[state.currentQuestionIndex];
   const progress = getProgress(state);
   const progressPercent = (progress.current / progress.total) * 100;
+  track(analytics.recordSessionEvent("question_view", state.currentQuestionIndex + 1));
 
   setScreen(`
     <section class="game-screen">
@@ -171,9 +232,20 @@ function renderResult() {
       </div>
       <div class="description">${description}</div>
       <div class="expanded-results">${expandedSections}</div>
+      <section class="stats-box" aria-label="참여 통계">
+        <h3>참여 현황</h3>
+        <div id="stats-panel">
+          <p class="stats-empty">참여 통계를 불러오는 중입니다.</p>
+        </div>
+      </section>
       <button id="reset-button" class="reset-button" type="button">처음으로</button>
     </section>
   `);
+
+  analytics
+    .recordResultAndLoadStats(result.code, state.answers)
+    .then((stats) => updateStatsPanel(stats, result))
+    .catch(showStatsError);
 
   document.querySelector("#reset-button").addEventListener("click", () => {
     state = createGameState();

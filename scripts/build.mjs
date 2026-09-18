@@ -22,6 +22,10 @@ const sourceFiles = {
     contentType: "text/javascript; charset=utf-8",
     body: readFileSync("src/results.js", "utf8"),
   },
+  "/src/analytics.js": {
+    contentType: "text/javascript; charset=utf-8",
+    body: readFileSync("src/analytics.js", "utf8"),
+  },
 };
 
 const worker = `const files = ${JSON.stringify(sourceFiles)};
