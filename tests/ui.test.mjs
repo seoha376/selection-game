@@ -20,5 +20,9 @@ assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
 assert.ok(styles.includes(".score-bar-fill"), "Score bars should be styled");
 assert.ok(styles.includes(".stats-box"), "Participation statistics should be styled");
 assert.ok(styles.includes(".result-stats-bars"), "Result distribution statistics should be styled");
+assert.ok(styles.includes("Gowun Batang"), "Headings should use Gowun Batang");
+assert.ok(styles.includes("Pretendard"), "Body and controls should use Pretendard");
+assert.ok(!styles.includes("GungSeo"), "GungSeo should not remain in the font stack");
+assert.ok(!styles.includes("궁서"), "궁서체 should not remain in the font stack");
 
 console.log("All UI theme tests passed.");

@@ -7,59 +7,59 @@ const SECTION_TITLES = {
 
 export const QUESTIONS = [
   {
-    title: "기념 행사의 준비 일정이 예상보다 늦어지고 있다. 당신에게 더 가까운 선택은?",
+    title: "단체 채팅방에서 의견이 계속 오가는데, 아직 결론이 나지 않는다. 이럴 때 더 가까운 쪽은?",
     options: {
-      A: { text: "지금 가능한 기준을 정하고 바로 실행에 들어간다", resultCode: "EXECUTION" },
-      B: { text: "팀원들의 의견을 다시 모아 함께 납득할 방향을 찾는다", resultCode: "PEOPLE" },
+      A: { text: "나온 의견을 정리해서 선택지를 좁혀준다", resultCode: "EXECUTION" },
+      B: { text: "각자 어떤 쪽이 좋은지 다시 물어보고 맞춰본다", resultCode: "PEOPLE" },
     },
   },
   {
-    title: "김구의 문장을 현대적으로 소개해야 한다. 더 끌리는 방식은?",
+    title: "늘 가던 길로 가면 늦지 않게 도착할 수 있다. 그런데 오늘은 처음 보는 골목길이 눈에 들어왔다.",
     options: {
-      A: { text: "원문이 가진 뜻과 품격을 최대한 지켜 전달한다", resultCode: "VALUE" },
-      B: { text: "요즘 사람들이 반응할 새로운 표현과 형식으로 바꿔본다", resultCode: "CHANGE" },
+      A: { text: "아는 길이 확실하니 익숙한 길로 간다", resultCode: "VALUE" },
+      B: { text: "시간이 괜찮다면 새로운 길로 가본다", resultCode: "CHANGE" },
     },
   },
   {
-    title: "굿즈 디자인 후보를 고르는 회의에서 반응이 갈린다. 당신은?",
+    title: "사고 싶은 물건을 고르는데 마음에 드는 후보가 몇 개 있다. 이럴 때 나는?",
     options: {
-      A: { text: "가장 완성도 높고 일정 안에 제작 가능한 안을 고른다", resultCode: "EXECUTION" },
-      B: { text: "행사의 의미가 오래 남을 수 있는 안을 다시 살핀다", resultCode: "VALUE" },
+      A: { text: "조건이 맞는 걸 고르고 빨리 결정하는 편", resultCode: "EXECUTION" },
+      B: { text: "오래 써도 후회 없을지 한 번 더 따져보는 편", resultCode: "VALUE" },
     },
   },
   {
-    title: "행사의 메시지를 한 문장으로 정해야 한다. 당신이 더 중요하게 보는 것은?",
+    title: "모임 분위기가 어딘가 가라앉아 있다. 이럴 때 나는?",
     options: {
-      A: { text: "서로 다른 세대가 함께 공감할 수 있는 문장", resultCode: "PEOPLE" },
-      B: { text: "낯설지만 사람들이 다시 보게 만드는 문장", resultCode: "CHANGE" },
+      A: { text: "말이 적어진 사람을 살피며 자연스럽게 챙긴다", resultCode: "PEOPLE" },
+      B: { text: "새로운 이야기나 활동을 꺼내 분위기를 바꿔본다", resultCode: "CHANGE" },
     },
   },
   {
-    title: "현장에서 갑자기 동선 문제가 생겼다. 당신이 먼저 할 일은?",
+    title: "친구들끼리 만나기로 한 날, 아직 아무도 뭘 할지 정하지 않았다. 이럴 때 나는 보통?",
     options: {
-      A: { text: "역할을 나누고 바로 움직여 혼선을 줄인다", resultCode: "EXECUTION" },
-      B: { text: "당황한 사람들을 안정시키고 안내가 닿게 만든다", resultCode: "PEOPLE" },
+      A: { text: "후보를 몇 개 골라서 “이 중에서 고르자”고 말한다", resultCode: "EXECUTION" },
+      B: { text: "다들 뭘 하고 싶은지 먼저 물어보고 분위기를 본다", resultCode: "PEOPLE" },
     },
   },
   {
-    title: "전시 코너에 새로운 체험 요소를 넣자는 의견이 나왔다. 당신은?",
+    title: "다 같이 준비한 결과물이 거의 완성됐다. 마지막으로 시간이 조금 남았다면?",
     options: {
-      A: { text: "현장에서 바로 운영 가능한 형태로 다듬어본다", resultCode: "EXECUTION" },
-      B: { text: "작게라도 시도해보고 관람객 반응을 확인해본다", resultCode: "CHANGE" },
+      A: { text: "빠진 게 없는지 확인하고 깔끔하게 마무리한다", resultCode: "EXECUTION" },
+      B: { text: "더 재밌어 보일 수 있는 포인트를 하나 넣어본다", resultCode: "CHANGE" },
     },
   },
   {
-    title: "팀 안에서 한 사람의 아이디어가 유독 돋보인다. 당신의 선택은?",
+    title: "여럿이 함께 준비한 행사가 끝났다. 이럴 때 더 만족스러운 쪽은?",
     options: {
-      A: { text: "그 아이디어를 팀 전체가 함께 발전시키게 한다", resultCode: "PEOPLE" },
-      B: { text: "행사의 기준과 어긋나지 않게 의미를 더 정리한다", resultCode: "VALUE" },
+      A: { text: "함께한 사람들이 즐겁게 참여하고 잘 마무리된 것", resultCode: "PEOPLE" },
+      B: { text: "처음 세운 계획과 방향이 끝까지 잘 지켜진 것", resultCode: "VALUE" },
     },
   },
   {
-    title: "김구 150주년을 오늘의 감각으로 기억하게 하려면 무엇이 더 필요할까?",
+    title: "새로운 일을 시작할 기회가 생겼다. 그때 나를 더 움직이게 하는 건?",
     options: {
-      A: { text: "시간이 지나도 흐려지지 않을 가치와 기준", resultCode: "VALUE" },
-      B: { text: "지금 세대가 자기 방식으로 다시 해석할 여지", resultCode: "CHANGE" },
+      A: { text: "오래 두고 봐도 납득할 만한 이유가 있는 일", resultCode: "VALUE" },
+      B: { text: "지금까지 해보지 않은 방식으로 시도해볼 수 있는 일", resultCode: "CHANGE" },
     },
   },
 ];

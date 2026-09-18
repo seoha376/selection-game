@@ -13,6 +13,55 @@ import {
 } from "../src/results.js";
 
 assert.equal(QUESTIONS.length, 8, "The production test should have eight questions");
+assert.deepEqual(
+  QUESTIONS.map((question) => ({
+    title: question.title,
+    A: question.options.A.text,
+    B: question.options.B.text,
+  })),
+  [
+    {
+      title: "단체 채팅방에서 의견이 계속 오가는데, 아직 결론이 나지 않는다. 이럴 때 더 가까운 쪽은?",
+      A: "나온 의견을 정리해서 선택지를 좁혀준다",
+      B: "각자 어떤 쪽이 좋은지 다시 물어보고 맞춰본다",
+    },
+    {
+      title: "늘 가던 길로 가면 늦지 않게 도착할 수 있다. 그런데 오늘은 처음 보는 골목길이 눈에 들어왔다.",
+      A: "아는 길이 확실하니 익숙한 길로 간다",
+      B: "시간이 괜찮다면 새로운 길로 가본다",
+    },
+    {
+      title: "사고 싶은 물건을 고르는데 마음에 드는 후보가 몇 개 있다. 이럴 때 나는?",
+      A: "조건이 맞는 걸 고르고 빨리 결정하는 편",
+      B: "오래 써도 후회 없을지 한 번 더 따져보는 편",
+    },
+    {
+      title: "모임 분위기가 어딘가 가라앉아 있다. 이럴 때 나는?",
+      A: "말이 적어진 사람을 살피며 자연스럽게 챙긴다",
+      B: "새로운 이야기나 활동을 꺼내 분위기를 바꿔본다",
+    },
+    {
+      title: "친구들끼리 만나기로 한 날, 아직 아무도 뭘 할지 정하지 않았다. 이럴 때 나는 보통?",
+      A: "후보를 몇 개 골라서 “이 중에서 고르자”고 말한다",
+      B: "다들 뭘 하고 싶은지 먼저 물어보고 분위기를 본다",
+    },
+    {
+      title: "다 같이 준비한 결과물이 거의 완성됐다. 마지막으로 시간이 조금 남았다면?",
+      A: "빠진 게 없는지 확인하고 깔끔하게 마무리한다",
+      B: "더 재밌어 보일 수 있는 포인트를 하나 넣어본다",
+    },
+    {
+      title: "여럿이 함께 준비한 행사가 끝났다. 이럴 때 더 만족스러운 쪽은?",
+      A: "함께한 사람들이 즐겁게 참여하고 잘 마무리된 것",
+      B: "처음 세운 계획과 방향이 끝까지 잘 지켜진 것",
+    },
+    {
+      title: "새로운 일을 시작할 기회가 생겼다. 그때 나를 더 움직이게 하는 건?",
+      A: "오래 두고 봐도 납득할 만한 이유가 있는 일",
+      B: "지금까지 해보지 않은 방식으로 시도해볼 수 있는 일",
+    },
+  ],
+);
 for (const question of QUESTIONS) {
   assert.ok(question.title, "Each question should have a title");
   assert.ok(question.options.A.text, "Each A option should have text");
