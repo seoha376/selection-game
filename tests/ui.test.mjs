@@ -10,6 +10,8 @@ assert.ok(appSource.includes("result-symbol"), "Result screen should show a visi
 assert.ok(appSource.includes("score-bars"), "Result screen should visualize score distribution");
 assert.ok(appSource.includes("stats-box"), "Result screen should show participation statistics");
 assert.ok(appSource.includes("recordResultAndLoadStats"), "Result screen should load Supabase-backed statistics");
+assert.ok(appSource.includes('data-selected="${state.answers[state.currentQuestionIndex] === "A"}'), "A option should show when it is selected");
+assert.ok(appSource.includes('data-selected="${state.answers[state.currentQuestionIndex] === "B"}'), "B option should show when it is selected");
 
 for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(styles.includes(`.result-card[data-result="${code}"]`), `${code} should have a result-specific theme`);
