@@ -33,6 +33,11 @@ const RESULT_VISUALS = {
     lead: "익숙한 답 너머의 가능성을 여는 사람",
   },
 };
+const SITE_URL = "https://seoha376.github.io/selection-game/";
+
+function createShareText(result) {
+  return `나는 ${result.name}!\n8개의 선택으로 알아보는 나의 리더십 유형 테스트\n너도 해봐: ${SITE_URL}`;
+}
 
 function syncRoute(replace = false) {
   const nextPath = getPagePath(state);
@@ -107,6 +112,33 @@ function showStatsError() {
   }
 
   panel.innerHTML = `<p class="stats-empty">참여 통계는 잠시 불러오지 못했어요. 결과 내용은 정상적으로 확인할 수 있습니다.</p>`;
+}
+
+function updateShareFeedback(message) {
+  const feedback = document.querySelector("#share-feedback");
+  if (!feedback) {
+    return;
+  }
+
+  feedback.textContent = message;
+}
+
+async function shareResult(result) {
+  const text = createShareText(result);
+  const shareData = {
+    title: "나의 리더십 방향은?",
+    text,
+    url: SITE_URL,
+  };
+
+  if (navigator.share) {
+    await navigator.share(shareData);
+    updateShareFeedback("공유 창을 열었어요.");
+    return;
+  }
+
+  await navigator.clipboard.writeText(text);
+  updateShareFeedback("공유 문구를 복사했어요.");
 }
 
 function renderCover() {
@@ -238,6 +270,10 @@ function renderResult() {
           <p class="stats-empty">참여 통계를 불러오는 중입니다.</p>
         </div>
       </section>
+      <div class="share-actions">
+        <button id="share-button" class="primary-button share-button" type="button">결과 공유하기</button>
+        <p id="share-feedback" class="share-feedback" role="status" aria-live="polite"></p>
+      </div>
       <button id="reset-button" class="reset-button" type="button">처음으로</button>
     </section>
   `);
@@ -251,6 +287,12 @@ function renderResult() {
     state = createGameState();
     syncRoute();
     render();
+  });
+
+  document.querySelector("#share-button").addEventListener("click", () => {
+    shareResult(result).catch(() => {
+      updateShareFeedback("공유 문구를 복사하지 못했어요. 링크를 직접 복사해 주세요.");
+    });
   });
 }
 

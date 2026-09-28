@@ -12,6 +12,11 @@ assert.ok(appSource.includes("stats-box"), "Result screen should show participat
 assert.ok(appSource.includes("recordResultAndLoadStats"), "Result screen should load Supabase-backed statistics");
 assert.ok(appSource.includes('data-selected="${state.answers[state.currentQuestionIndex] === "A"}'), "A option should show when it is selected");
 assert.ok(appSource.includes('data-selected="${state.answers[state.currentQuestionIndex] === "B"}'), "B option should show when it is selected");
+assert.ok(appSource.includes("createShareText"), "Result screen should build a result-specific share message");
+assert.ok(appSource.includes("navigator.share"), "Result share should use the native share sheet when available");
+assert.ok(appSource.includes("navigator.clipboard.writeText"), "Result share should fall back to copying text");
+assert.ok(appSource.includes("share-button"), "Result screen should include a share button");
+assert.ok(appSource.includes("공유 문구를 복사했어요."), "Share fallback should tell users when text is copied");
 
 for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(styles.includes(`.result-card[data-result="${code}"]`), `${code} should have a result-specific theme`);
@@ -20,6 +25,8 @@ assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
 assert.ok(styles.includes(".score-bar-fill"), "Score bars should be styled");
 assert.ok(styles.includes(".stats-box"), "Participation statistics should be styled");
 assert.ok(styles.includes(".result-stats-bars"), "Result distribution statistics should be styled");
+assert.ok(styles.includes(".share-actions"), "Share actions should be styled");
+assert.ok(styles.includes(".share-feedback"), "Share feedback should be styled");
 assert.ok(styles.includes("Gowun Batang"), "Headings should use Gowun Batang");
 assert.ok(styles.includes("Pretendard"), "Body and controls should use Pretendard");
 assert.ok(!styles.includes("GungSeo"), "GungSeo should not remain in the font stack");

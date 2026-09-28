@@ -529,9 +529,29 @@ h1 {
   background: var(--result-accent);
 }
 
+.share-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.share-button {
+  width: 100%;
+}
+
+.share-feedback {
+  min-height: 1.5em;
+  margin: 0;
+  color: #665b47;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .reset-button {
   width: 100%;
-  margin-top: 18px;
+  margin-top: 10px;
   padding: 0 16px;
 }
 
