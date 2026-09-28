@@ -4,8 +4,10 @@ import { existsSync, readFileSync } from "node:fs";
 const indexSource = readFileSync("index.html", "utf8");
 const buildSource = readFileSync("scripts/build.mjs", "utf8");
 const ogImageUrl = "https://seoha376.github.io/selection-game/assets/og-image.png";
+const qrImageUrl = "https://seoha376.github.io/selection-game/assets/selection-game-qr.png";
 
 assert.ok(existsSync("assets/og-image.png"), "Representative image should be available at assets/og-image.png");
+assert.ok(existsSync("assets/selection-game-qr.png"), "Printable QR image should be available at assets/selection-game-qr.png");
 
 assert.ok(indexSource.includes("<title>나의 리더십 방향은?</title>"), "Title should be share-ready");
 assert.ok(
@@ -21,7 +23,10 @@ assert.ok(indexSource.includes('name="twitter:card" content="summary_large_image
 assert.ok(indexSource.includes(`name="twitter:image" content="${ogImageUrl}"`), "Twitter image should be an absolute HTTPS URL");
 
 assert.ok(buildSource.includes('"/assets/og-image.png"'), "Build output should route the OG image asset");
+assert.ok(buildSource.includes('"/assets/selection-game-qr.png"'), "Build output should route the QR image asset");
 assert.ok(buildSource.includes("readFileSync(\"assets/og-image.png\")"), "Build script should read the OG image as bytes");
+assert.ok(buildSource.includes("readFileSync(\"assets/selection-game-qr.png\")"), "Build script should read the QR image as bytes");
 assert.ok(buildSource.includes("Uint8Array"), "Build script should decode binary assets before responding");
+assert.ok(qrImageUrl.endsWith("/assets/selection-game-qr.png"), "QR image should have a stable public URL");
 
 console.log("All share preview tests passed.");

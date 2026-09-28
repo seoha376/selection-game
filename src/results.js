@@ -197,16 +197,9 @@ export const RESULT_CONTENT = {
 
 const RESULT_CODES = ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"];
 const FALLBACK_PRIORITY = ["VALUE", "PEOPLE", "EXECUTION", "CHANGE"];
+const TARGET_RESULT_COUNT = 2 ** QUESTIONS.length / RESULT_CODES.length;
 
-export function calculateResult(answers) {
-  if (!Array.isArray(answers) || answers.length !== QUESTIONS.length) {
-    throw new Error("Result calculation requires exactly eight answers.");
-  }
-
-  if (!answers.every((answer) => answer === "A" || answer === "B")) {
-    throw new Error("Each answer must be A or B.");
-  }
-
+function buildResultInterpretation(answers) {
   const scores = Object.fromEntries(RESULT_CODES.map((code) => [code, 0]));
   const interpretedAnswers = answers.map((answer, index) => {
     const question = QUESTIONS[index];
@@ -219,12 +212,79 @@ export function calculateResult(answers) {
       optionText: selectedOption.text,
     };
   });
-
   const highScore = Math.max(...Object.values(scores));
   const tiedCodes = RESULT_CODES.filter((code) => scores[code] === highScore);
-  const recentTieBreaker = [...interpretedAnswers].reverse().find((entry) => tiedCodes.includes(entry.resultCode));
+
+  return {
+    scores,
+    interpretedAnswers,
+    tiedCodes,
+  };
+}
+
+function createBalancedTieBreakerMap() {
+  const fixedCounts = Object.fromEntries(RESULT_CODES.map((code) => [code, 0]));
+  const ties = [];
+
+  for (let index = 0; index < 2 ** QUESTIONS.length; index += 1) {
+    const answers = index
+      .toString(2)
+      .padStart(QUESTIONS.length, "0")
+      .split("")
+      .map((bit) => (bit === "0" ? "A" : "B"));
+    const { tiedCodes } = buildResultInterpretation(answers);
+
+    if (tiedCodes.length === 1) {
+      fixedCounts[tiedCodes[0]] += 1;
+    } else {
+      ties.push({
+        key: answers.join(""),
+        tiedCodes,
+      });
+    }
+  }
+
+  const remainingCounts = Object.fromEntries(
+    RESULT_CODES.map((code) => [code, TARGET_RESULT_COUNT - fixedCounts[code]]),
+  );
+  const tieBreakerMap = {};
+
+  ties
+    .sort((a, b) => a.tiedCodes.length - b.tiedCodes.length || a.key.localeCompare(b.key))
+    .forEach((tie) => {
+      const winner = tie.tiedCodes
+        .filter((code) => remainingCounts[code] > 0)
+        .sort((a, b) => remainingCounts[b] - remainingCounts[a] || RESULT_CODES.indexOf(a) - RESULT_CODES.indexOf(b))[0];
+
+      if (!winner) {
+        tieBreakerMap[tie.key] = FALLBACK_PRIORITY.find((code) => tie.tiedCodes.includes(code)) || tie.tiedCodes[0];
+        return;
+      }
+
+      tieBreakerMap[tie.key] = winner;
+      remainingCounts[winner] -= 1;
+    });
+
+  return tieBreakerMap;
+}
+
+const BALANCED_TIE_BREAKER_MAP = createBalancedTieBreakerMap();
+
+export function calculateResult(answers) {
+  if (!Array.isArray(answers) || answers.length !== QUESTIONS.length) {
+    throw new Error("Result calculation requires exactly eight answers.");
+  }
+
+  if (!answers.every((answer) => answer === "A" || answer === "B")) {
+    throw new Error("Each answer must be A or B.");
+  }
+
+  const { scores, interpretedAnswers, tiedCodes } = buildResultInterpretation(answers);
+  const answerKey = answers.join("");
   const winnerCode =
-    recentTieBreaker?.resultCode || FALLBACK_PRIORITY.find((code) => tiedCodes.includes(code)) || "VALUE";
+    tiedCodes.length === 1
+      ? tiedCodes[0]
+      : BALANCED_TIE_BREAKER_MAP[answerKey] || FALLBACK_PRIORITY.find((code) => tiedCodes.includes(code)) || "VALUE";
   const result = RESULT_CONTENT[winnerCode];
   const sortedScores = RESULT_CODES.map((code) => ({
     code,

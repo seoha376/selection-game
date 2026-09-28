@@ -75,7 +75,6 @@ const expectedResults = {
   BABABAAB: "PEOPLE",
   AABBABBA: "VALUE",
   BBBBBBBB: "CHANGE",
-  AAAABBBB: "CHANGE",
 };
 
 for (const [answers, expectedCode] of Object.entries(expectedResults)) {
@@ -84,6 +83,31 @@ for (const [answers, expectedCode] of Object.entries(expectedResults)) {
   assert.equal(result.answers.length, 8, `${answers} should keep eight interpreted answers`);
   assert.ok(result.reasonSummary.includes(result.name), `${answers} should include the winning result in summary`);
 }
+
+const balancedCounts = {
+  EXECUTION: 0,
+  PEOPLE: 0,
+  VALUE: 0,
+  CHANGE: 0,
+};
+for (let index = 0; index < 256; index += 1) {
+  const answers = index
+    .toString(2)
+    .padStart(8, "0")
+    .split("")
+    .map((bit) => (bit === "0" ? "A" : "B"));
+  balancedCounts[calculateResult(answers).code] += 1;
+}
+assert.deepEqual(
+  balancedCounts,
+  {
+    EXECUTION: 64,
+    PEOPLE: 64,
+    VALUE: 64,
+    CHANGE: 64,
+  },
+  "All possible answer combinations should be evenly distributed across result types",
+);
 
 for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   const content = RESULT_CONTENT[code];

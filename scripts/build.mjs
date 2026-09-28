@@ -33,6 +33,10 @@ const binaryFiles = {
     contentType: "image/png",
     body: readFileSync("assets/og-image.png").toString("base64"),
   },
+  "/assets/selection-game-qr.png": {
+    contentType: "image/png",
+    body: readFileSync("assets/selection-game-qr.png").toString("base64"),
+  },
 };
 
 const worker = `const files = ${JSON.stringify(sourceFiles)};
