@@ -5,9 +5,18 @@ const indexSource = readFileSync("index.html", "utf8");
 const buildSource = readFileSync("scripts/build.mjs", "utf8");
 const ogImageUrl = "https://seoha376.github.io/selection-game/assets/og-image.png";
 const qrImageUrl = "https://seoha376.github.io/selection-game/assets/selection-game-qr.png";
+const resultImagePaths = [
+  "assets/result-execution.png",
+  "assets/result-people.png",
+  "assets/result-value.png",
+  "assets/result-change.png",
+];
 
 assert.ok(existsSync("assets/og-image.png"), "Representative image should be available at assets/og-image.png");
 assert.ok(existsSync("assets/selection-game-qr.png"), "Printable QR image should be available at assets/selection-game-qr.png");
+for (const imagePath of resultImagePaths) {
+  assert.ok(existsSync(imagePath), `${imagePath} should be available for result pages`);
+}
 
 assert.ok(indexSource.includes("<title>나의 리더십 방향은?</title>"), "Title should be share-ready");
 assert.ok(
@@ -24,6 +33,10 @@ assert.ok(indexSource.includes(`name="twitter:image" content="${ogImageUrl}"`), 
 
 assert.ok(buildSource.includes('"/assets/og-image.png"'), "Build output should route the OG image asset");
 assert.ok(buildSource.includes('"/assets/selection-game-qr.png"'), "Build output should route the QR image asset");
+for (const imagePath of resultImagePaths) {
+  assert.ok(buildSource.includes(`"/${imagePath}"`), `${imagePath} should be routed by the build output`);
+  assert.ok(buildSource.includes(`readFileSync("${imagePath}")`), `${imagePath} should be read as bytes`);
+}
 assert.ok(buildSource.includes("readFileSync(\"assets/og-image.png\")"), "Build script should read the OG image as bytes");
 assert.ok(buildSource.includes("readFileSync(\"assets/selection-game-qr.png\")"), "Build script should read the QR image as bytes");
 assert.ok(buildSource.includes("Uint8Array"), "Build script should decode binary assets before responding");

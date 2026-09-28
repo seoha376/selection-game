@@ -37,6 +37,22 @@ const binaryFiles = {
     contentType: "image/png",
     body: readFileSync("assets/selection-game-qr.png").toString("base64"),
   },
+  "/assets/result-execution.png": {
+    contentType: "image/png",
+    body: readFileSync("assets/result-execution.png").toString("base64"),
+  },
+  "/assets/result-people.png": {
+    contentType: "image/png",
+    body: readFileSync("assets/result-people.png").toString("base64"),
+  },
+  "/assets/result-value.png": {
+    contentType: "image/png",
+    body: readFileSync("assets/result-value.png").toString("base64"),
+  },
+  "/assets/result-change.png": {
+    contentType: "image/png",
+    body: readFileSync("assets/result-change.png").toString("base64"),
+  },
 };
 
 const worker = `const files = ${JSON.stringify(sourceFiles)};

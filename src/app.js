@@ -36,6 +36,12 @@ const RESULT_VISUALS = {
   },
 };
 const SITE_URL = "https://seoha376.github.io/selection-game/";
+const RESULT_IMAGES = {
+  EXECUTION: "./assets/result-execution.png",
+  PEOPLE: "./assets/result-people.png",
+  VALUE: "./assets/result-value.png",
+  CHANGE: "./assets/result-change.png",
+};
 const COMPASS_POINTS = [
   { code: "EXECUTION", label: "움직임" },
   { code: "PEOPLE", label: "연결" },
@@ -246,6 +252,7 @@ function renderQuestion() {
 function renderResult() {
   const result = calculateResult(state.answers);
   const visual = RESULT_VISUALS[result.code];
+  const imageSrc = RESULT_IMAGES[result.code];
   const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
   const compassPoints = COMPASS_POINTS.map(
     (point) => `
@@ -268,6 +275,9 @@ function renderResult() {
   setScreen(`
     <section class="result-card paper-panel" data-result="${result.code}">
       <div class="result-hero">
+        <div class="result-image-wrap">
+          <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
+        </div>
         <div class="result-symbol" aria-hidden="true">${visual.symbol}</div>
         <div class="result-identity">
           <p class="result-code">${result.code}</p>
@@ -319,12 +329,16 @@ function renderResult() {
 function renderSharedResult() {
   const result = RESULT_CONTENT[state.shareResultCode] || RESULT_CONTENT.VALUE;
   const visual = RESULT_VISUALS[result.code];
+  const imageSrc = RESULT_IMAGES[result.code];
   const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
 
   setScreen(`
     <section class="result-card shared-result paper-panel" data-result="${result.code}">
       <p class="eyebrow">김구 탄생 150주년 기념 체험</p>
       <div class="result-hero">
+        <div class="result-image-wrap">
+          <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
+        </div>
         <div class="result-symbol" aria-hidden="true">${visual.symbol}</div>
         <div class="result-identity">
           <p class="result-code">친구의 리더십 방향은</p>

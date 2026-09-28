@@ -8,6 +8,9 @@ const styles = readFileSync("src/styles.css", "utf8");
 assert.ok(appSource.includes('data-result="${result.code}"'), "Result card should expose the result code to CSS");
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
 assert.ok(appSource.includes("result-symbol"), "Result screen should show a visible type symbol");
+assert.ok(appSource.includes("RESULT_IMAGES"), "Result screens should map each type to a visual image");
+assert.ok(appSource.includes("result-image"), "Result screens should render the result image");
+assert.ok(appSource.includes('alt="${result.name} 상징 이미지"'), "Result image should have accessible alt text");
 assert.ok(appSource.includes("leadership-compass"), "Result screen should use a non-numeric leadership compass");
 assert.ok(!appSource.includes("score-bars"), "Result screen should not expose personal score counts");
 assert.ok(!appSource.includes("scoreSummary"), "Result screen should not render personal score summaries");
@@ -36,6 +39,8 @@ for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(styles.includes(`.result-card[data-result="${code}"]`), `${code} should have a result-specific theme`);
 }
 assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
+assert.ok(styles.includes(".result-image-wrap"), "Result image wrapper should be styled");
+assert.ok(styles.includes(".result-image"), "Result images should be styled");
 assert.ok(styles.includes(".leadership-compass"), "Leadership compass should be styled");
 assert.ok(styles.includes(".compass-point"), "Compass points should be styled");
 assert.ok(!styles.includes(".score-bar-fill"), "Personal score bar styling should be removed");
