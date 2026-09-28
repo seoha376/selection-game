@@ -3,6 +3,7 @@ import {
   backToPreviousQuestion,
   calculateResult,
   createGameState,
+  createShareState,
   getPagePath,
   getProgress,
   QUESTIONS,
@@ -166,5 +167,14 @@ state = revealResult(state);
 assert.equal(state.screen, "result");
 assert.equal(getPagePath(state), "#/result");
 assert.equal(calculateResult(state.answers).code, "PEOPLE");
+
+state = createShareState("EXECUTION");
+assert.equal(state.screen, "share");
+assert.equal(state.shareResultCode, "EXECUTION");
+assert.equal(getPagePath(state), "#/share/EXECUTION");
+
+state = createShareState("NOPE");
+assert.equal(state.screen, "cover");
+assert.equal(getPagePath(state), "#/intro");
 
 console.log("All result mapping tests passed.");

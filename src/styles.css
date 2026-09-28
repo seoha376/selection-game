@@ -536,6 +536,35 @@ h1 {
   font-size: 1.05rem;
 }
 
+.shared-result > .eyebrow {
+  margin-bottom: 14px;
+}
+
+.shared-invite {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid var(--result-line);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 252, 242, 0.74), transparent 36%),
+    color-mix(in srgb, var(--result-soft) 70%, rgba(255, 252, 242, 0.78));
+}
+
+.shared-invite h3 {
+  margin: 0;
+  color: #3f392d;
+  font-family: "Gowun Batang", Batang, serif;
+  font-size: 1.2rem;
+}
+
+.shared-invite p {
+  margin: 0;
+  color: #51493a;
+  line-height: 1.7;
+}
+
 .stats-empty {
   margin: 0;
   color: #665b47;

@@ -2,9 +2,11 @@ import {
   backToPreviousQuestion,
   calculateResult,
   createGameState,
+  createShareState,
   getPagePath,
   getProgress,
   QUESTIONS,
+  RESULT_CONTENT,
   revealResult,
   selectAnswer as selectGameAnswer,
   startGame,
@@ -42,7 +44,20 @@ const COMPASS_POINTS = [
 ];
 
 function createShareText(result) {
-  return `나는 ${result.name}!\n8개의 선택으로 알아보는 나의 리더십 유형 테스트\n너도 해봐: ${SITE_URL}`;
+  return `내 리더십 방향은 ${result.name}.\n친구의 결과를 확인하고, 너도 테스트해봐.`;
+}
+
+function createShareUrl(result) {
+  return `${SITE_URL}#/share/${result.code}`;
+}
+
+function createStateFromHash(hash) {
+  const shareMatch = hash.match(/^#\/share\/([A-Z]+)$/);
+  if (shareMatch) {
+    return createShareState(shareMatch[1]);
+  }
+
+  return createGameState();
 }
 
 function syncRoute(replace = false) {
@@ -131,10 +146,11 @@ function updateShareFeedback(message) {
 
 async function shareResult(result) {
   const text = createShareText(result);
+  const url = createShareUrl(result);
   const shareData = {
     title: "나의 리더십 방향은?",
     text,
-    url: SITE_URL,
+    url,
   };
 
   if (navigator.share) {
@@ -143,7 +159,7 @@ async function shareResult(result) {
     return;
   }
 
-  await navigator.clipboard.writeText(text);
+  await navigator.clipboard.writeText(`${text}\n${url}`);
   updateShareFeedback("공유 문구를 복사했어요.");
 }
 
@@ -300,6 +316,40 @@ function renderResult() {
   });
 }
 
+function renderSharedResult() {
+  const result = RESULT_CONTENT[state.shareResultCode] || RESULT_CONTENT.VALUE;
+  const visual = RESULT_VISUALS[result.code];
+  const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
+
+  setScreen(`
+    <section class="result-card shared-result paper-panel" data-result="${result.code}">
+      <p class="eyebrow">김구 탄생 150주년 기념 체험</p>
+      <div class="result-hero">
+        <div class="result-symbol" aria-hidden="true">${visual.symbol}</div>
+        <div class="result-identity">
+          <p class="result-code">친구의 리더십 방향은</p>
+          <h2>${result.name}</h2>
+          <p class="result-lead">${visual.lead}</p>
+          <p class="catchphrase">${result.catchphrase}</p>
+          <p class="keywords">${result.keywords}</p>
+        </div>
+      </div>
+      <div class="description">${description}</div>
+      <section class="shared-invite">
+        <h3>당신의 방향도 확인해볼까요?</h3>
+        <p>8개의 선택을 따라가면 나의 리더십 방향을 가볍게 확인할 수 있습니다.</p>
+        <button id="take-test-button" class="primary-button" type="button">나도 테스트 해보기</button>
+      </section>
+    </section>
+  `);
+
+  document.querySelector("#take-test-button").addEventListener("click", () => {
+    state = createGameState();
+    syncRoute();
+    render();
+  });
+}
+
 function render() {
   document.body.dataset.screen = state.screen;
 
@@ -313,15 +363,27 @@ function render() {
     return;
   }
 
+  if (state.screen === "share") {
+    renderSharedResult();
+    return;
+  }
+
   renderQuestion();
 }
 
 window.addEventListener("hashchange", () => {
+  if (window.location.hash.startsWith("#/share/")) {
+    state = createStateFromHash(window.location.hash);
+    render();
+    return;
+  }
+
   if (window.location.hash === "#/intro" || window.location.hash === "") {
     state = createGameState();
     render();
   }
 });
 
+state = createStateFromHash(window.location.hash);
 syncRoute(true);
 render();

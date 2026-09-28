@@ -325,12 +325,28 @@ export function calculateResult(answers) {
 export function createGameState() {
   return {
     screen: "cover",
-      currentQuestionIndex: 0,
+    currentQuestionIndex: 0,
     answers: Array(QUESTIONS.length).fill(null),
   };
 }
 
+export function createShareState(resultCode) {
+  if (!RESULT_CONTENT[resultCode]) {
+    return createGameState();
+  }
+
+  return {
+    ...createGameState(),
+    screen: "share",
+    shareResultCode: resultCode,
+  };
+}
+
 export function getPagePath(state) {
+  if (state.screen === "share") {
+    return `#/share/${state.shareResultCode}`;
+  }
+
   if (state.screen === "result") {
     return "#/result";
   }
