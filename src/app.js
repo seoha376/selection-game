@@ -187,8 +187,14 @@ function renderQuestion() {
         <p class="question-number">Q${state.currentQuestionIndex + 1}</p>
         <h2>${question.title}</h2>
         <div class="options">
-          <button class="option-button" type="button" data-answer="A" data-selected="${state.answers[state.currentQuestionIndex] === "A"}">A. ${question.options.A.text}</button>
-          <button class="option-button" type="button" data-answer="B" data-selected="${state.answers[state.currentQuestionIndex] === "B"}">B. ${question.options.B.text}</button>
+          <button class="option-button" type="button" data-answer="A" data-selected="${state.answers[state.currentQuestionIndex] === "A"}">
+            <span class="option-choice-mark">選 A</span>
+            <span class="option-choice-text">${question.options.A.text}</span>
+          </button>
+          <button class="option-button" type="button" data-answer="B" data-selected="${state.answers[state.currentQuestionIndex] === "B"}">
+            <span class="option-choice-mark">選 B</span>
+            <span class="option-choice-text">${question.options.B.text}</span>
+          </button>
         </div>
       </section>
       ${state.screen === "review" ? '<button id="show-result-button" class="primary-button result-button" type="button">결과보기</button>' : ""}

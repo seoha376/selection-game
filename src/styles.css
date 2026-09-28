@@ -214,7 +214,7 @@ h1 {
 .options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .option-button,
@@ -236,8 +236,53 @@ h1 {
 }
 
 .option-button {
+  min-height: 148px;
+  display: grid;
+  align-content: space-between;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
   padding: 18px;
   text-align: left;
+  background:
+    linear-gradient(135deg, rgba(255, 252, 242, 0.98), rgba(244, 234, 207, 0.82)),
+    repeating-linear-gradient(90deg, rgba(45, 35, 22, 0.032) 0 1px, transparent 1px 26px);
+  box-shadow:
+    0 16px 34px rgba(67, 52, 31, 0.1),
+    inset 0 0 24px rgba(116, 95, 57, 0.06);
+}
+
+.option-button::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  border: 1px solid rgba(60, 48, 32, 0.08);
+  border-radius: 6px;
+}
+
+.option-choice-mark {
+  width: fit-content;
+  min-width: 54px;
+  display: inline-grid;
+  place-items: center;
+  padding: 6px 9px;
+  border: 1px solid rgba(60, 48, 32, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 252, 242, 0.62);
+  color: #6f5c37;
+  font-family: "Gowun Batang", Batang, serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.option-choice-text {
+  display: block;
+  color: #342f25;
+  font-size: clamp(1.02rem, 2.8vw, 1.22rem);
+  font-weight: 800;
+  line-height: 1.52;
 }
 
 .option-button:hover,
@@ -246,6 +291,10 @@ h1 {
 .reset-button:hover {
   transform: translateY(-1px);
   border-color: rgba(130, 145, 106, 0.58);
+}
+
+.option-button:active {
+  transform: translateY(0) scale(0.99);
 }
 
 .primary-button,
@@ -257,6 +306,25 @@ h1 {
 
 .primary-button {
   padding: 0 24px;
+}
+
+.option-button[data-selected="true"] {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 252, 242, 0.16), transparent 36%),
+    linear-gradient(135deg, #4d4638, #3d372c);
+  box-shadow:
+    0 18px 38px rgba(67, 52, 31, 0.18),
+    inset 0 0 0 1px rgba(255, 252, 242, 0.1);
+}
+
+.option-button[data-selected="true"] .option-choice-mark {
+  border-color: rgba(255, 252, 242, 0.34);
+  background: rgba(255, 252, 242, 0.12);
+  color: #fff4d9;
+}
+
+.option-button[data-selected="true"] .option-choice-text {
+  color: #fffaf0;
 }
 
 .icon-button {
