@@ -34,6 +34,12 @@ const RESULT_VISUALS = {
   },
 };
 const SITE_URL = "https://seoha376.github.io/selection-game/";
+const COMPASS_POINTS = [
+  { code: "EXECUTION", label: "움직임" },
+  { code: "PEOPLE", label: "연결" },
+  { code: "VALUE", label: "기준" },
+  { code: "CHANGE", label: "새로움" },
+];
 
 function createShareText(result) {
   return `나는 ${result.name}!\n8개의 선택으로 알아보는 나의 리더십 유형 테스트\n너도 해봐: ${SITE_URL}`;
@@ -219,21 +225,13 @@ function renderResult() {
   const result = calculateResult(state.answers);
   const visual = RESULT_VISUALS[result.code];
   const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
-  const scoreSummary = result.scoreSummary
-    .map(
-      (entry) => `
-        <li>
-          <div class="score-row">
-            <span>${entry.name}</span>
-            <strong>${entry.score}</strong>
-          </div>
-          <div class="score-bar" aria-hidden="true">
-            <span class="score-bar-fill" style="width: ${(entry.score / 8) * 100}%"></span>
-          </div>
-        </li>
-      `,
-    )
-    .join("");
+  const compassPoints = COMPASS_POINTS.map(
+    (point) => `
+      <li class="compass-point" data-active="${point.code === result.code}">
+        <span>${point.label}</span>
+      </li>
+    `,
+  ).join("");
   const expandedSections = result.expandedSections
     .map(
       (section) => `
@@ -258,9 +256,9 @@ function renderResult() {
         </div>
       </div>
       <div class="reason-box">
-        <h3>이 결과가 나온 이유</h3>
-        <p>${result.reasonSummary}</p>
-        <ul class="score-bars">${scoreSummary}</ul>
+        <h3>당신의 선택은 이런 방향을 가리켜요</h3>
+        <p>${result.compassSummary}</p>
+        <ul class="leadership-compass" aria-label="리더십 방향 나침반">${compassPoints}</ul>
       </div>
       <div class="description">${description}</div>
       <div class="expanded-results">${expandedSections}</div>

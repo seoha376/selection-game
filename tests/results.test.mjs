@@ -81,7 +81,8 @@ for (const [answers, expectedCode] of Object.entries(expectedResults)) {
   const result = calculateResult(answers.split(""));
   assert.equal(result.code, expectedCode, `${answers} should map to ${expectedCode}`);
   assert.equal(result.answers.length, 8, `${answers} should keep eight interpreted answers`);
-  assert.ok(result.reasonSummary.includes(result.name), `${answers} should include the winning result in summary`);
+  assert.ok(result.compassSummary.includes(result.name), `${answers} should include the winning result in compass summary`);
+  assert.ok(!result.compassSummary.includes("회"), `${answers} should not expose personal selection counts`);
 }
 
 const balancedCounts = {
@@ -115,11 +116,12 @@ for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(content.name, `${code} should have a name`);
   assert.ok(content.catchphrase, `${code} should have a catchphrase`);
   assert.ok(content.keywords, `${code} should have keywords`);
+  assert.ok(content.compassLabel, `${code} should have a compass label`);
   assert.ok(content.description.length >= 2, `${code} should have at least two description sentences`);
-  assert.equal(content.expandedSections.length, 4, `${code} should have four expanded result sections`);
+  assert.equal(content.expandedSections.length, 5, `${code} should have five expanded result sections`);
   assert.deepEqual(
     content.expandedSections.map((section) => section.title),
-    ["당신의 선택이 닿아 있는 태도", "함께할 때 빛나는 순간", "더 멀리 가려면", "오늘의 한 문장"],
+    ["당신이 빛나는 순간", "사람들 사이에서 보이는 모습", "조금 더 단단해지는 방법", "백범의 질문으로 바꿔보기", "오늘 가져갈 문장"],
   );
   assert.ok(content.expandedSections.every((section) => section.body.length >= 24), `${code} sections should be substantial`);
 }
