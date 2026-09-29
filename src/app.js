@@ -19,19 +19,15 @@ const analytics = createAnalyticsClient();
 
 const RESULT_VISUALS = {
   EXECUTION: {
-    symbol: "動",
     lead: "뜻을 움직임으로 바꾸는 사람",
   },
   PEOPLE: {
-    symbol: "和",
     lead: "서로 다른 마음을 한 방향으로 잇는 사람",
   },
   VALUE: {
-    symbol: "志",
     lead: "오래 남을 기준을 먼저 세우는 사람",
   },
   CHANGE: {
-    symbol: "新",
     lead: "익숙한 답 너머의 가능성을 여는 사람",
   },
 };
@@ -210,11 +206,11 @@ function renderQuestion() {
         <h2>${question.title}</h2>
         <div class="options">
           <button class="option-button" type="button" data-answer="A" data-selected="${state.answers[state.currentQuestionIndex] === "A"}">
-            <span class="option-choice-mark">選 A</span>
+            <span class="option-choice-mark">A</span>
             <span class="option-choice-text">${question.options.A.text}</span>
           </button>
           <button class="option-button" type="button" data-answer="B" data-selected="${state.answers[state.currentQuestionIndex] === "B"}">
-            <span class="option-choice-mark">選 B</span>
+            <span class="option-choice-mark">B</span>
             <span class="option-choice-text">${question.options.B.text}</span>
           </button>
         </div>
@@ -278,9 +274,8 @@ function renderResult() {
         <div class="result-image-wrap">
           <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
         </div>
-        <div class="result-symbol" aria-hidden="true">${visual.symbol}</div>
         <div class="result-identity">
-          <p class="result-code">${result.code}</p>
+          <p class="result-code">나의 리더십 방향은</p>
           <h2>${result.name}</h2>
           <p class="result-lead">${visual.lead}</p>
           <p class="catchphrase">${result.catchphrase}</p>
@@ -339,7 +334,6 @@ function renderSharedResult() {
         <div class="result-image-wrap">
           <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
         </div>
-        <div class="result-symbol" aria-hidden="true">${visual.symbol}</div>
         <div class="result-identity">
           <p class="result-code">친구의 리더십 방향은</p>
           <h2>${result.name}</h2>

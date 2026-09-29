@@ -7,7 +7,8 @@ const styles = readFileSync("src/styles.css", "utf8");
 
 assert.ok(appSource.includes('data-result="${result.code}"'), "Result card should expose the result code to CSS");
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
-assert.ok(appSource.includes("result-symbol"), "Result screen should show a visible type symbol");
+assert.ok(!appSource.includes("result-symbol"), "Result screen should not show a large hanja symbol");
+assert.ok(!appSource.includes('<p class="result-code">${result.code}</p>'), "Result screen should not expose English result codes");
 assert.ok(appSource.includes("RESULT_IMAGES"), "Result screens should map each type to a visual image");
 assert.ok(appSource.includes("result-image"), "Result screens should render the result image");
 assert.ok(appSource.includes('alt="${result.name} 상징 이미지"'), "Result image should have accessible alt text");
@@ -21,7 +22,7 @@ assert.ok(appSource.includes('data-selected="${state.answers[state.currentQuesti
 assert.ok(appSource.includes('data-selected="${state.answers[state.currentQuestionIndex] === "B"}'), "B option should show when it is selected");
 assert.ok(appSource.includes("option-choice-mark"), "Option cards should show a small choice mark");
 assert.ok(appSource.includes("option-choice-text"), "Option cards should separate the answer text from the mark");
-assert.ok(appSource.includes("選"), "Option cards should use a subtle selection seal");
+assert.ok(!appSource.includes("選"), "Option cards should not use decorative hanja");
 assert.ok(appSource.includes("createShareText"), "Result screen should build a result-specific share message");
 assert.ok(appSource.includes("createShareUrl"), "Result share should create a result-specific URL");
 assert.ok(appSource.includes("#/share/"), "Result share URLs should open the friend result page");
@@ -41,6 +42,7 @@ for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
 assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
 assert.ok(styles.includes(".result-image-wrap"), "Result image wrapper should be styled");
 assert.ok(styles.includes(".result-image"), "Result images should be styled");
+assert.ok(!styles.includes(".result-symbol"), "Large hanja symbol styling should be removed");
 assert.ok(styles.includes(".leadership-compass"), "Leadership compass should be styled");
 assert.ok(styles.includes(".compass-point"), "Compass points should be styled");
 assert.ok(!styles.includes(".score-bar-fill"), "Personal score bar styling should be removed");
@@ -50,6 +52,8 @@ assert.ok(styles.includes(".share-actions"), "Share actions should be styled");
 assert.ok(styles.includes(".share-feedback"), "Share feedback should be styled");
 assert.ok(styles.includes(".option-choice-mark"), "Option choice marks should be styled");
 assert.ok(styles.includes(".option-choice-text"), "Option text should be styled");
+assert.ok(styles.includes("word-break: keep-all"), "Option text should avoid awkward Korean line breaks");
+assert.ok(styles.includes("text-wrap: balance"), "Option text should balance line wrapping");
 assert.ok(styles.includes("box-shadow"), "Option cards should have tactile depth");
 assert.ok(styles.includes("scale(0.99)"), "Option cards should have a pressed state");
 assert.ok(styles.includes("Gowun Batang"), "Headings should use Gowun Batang");
