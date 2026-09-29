@@ -28,7 +28,8 @@ assert.ok(appSource.includes("createShareUrl"), "Result share should create a re
 assert.ok(appSource.includes("/share/"), "Result share URLs should open static friend result pages");
 assert.ok(!appSource.includes("`${SITE_URL}#/share/"), "Result share should not use hash URLs for social previews");
 assert.ok(appSource.includes("renderSharedResult"), "App should render a shared friend result page");
-assert.ok(appSource.includes("친구의 리더십 방향은"), "Shared result page should frame the friend's result");
+assert.ok(appSource.includes("공유된 리더십 방향은"), "Shared result page should use neutral wording");
+assert.ok(appSource.includes("당신의 방향도 한번 확인해보세요!"), "Share text should use the approved invitation wording");
 assert.ok(appSource.includes("나도 테스트 해보기"), "Shared result page should invite friends to take the test");
 assert.ok(appSource.includes("navigator.share"), "Result share should use the native share sheet when available");
 assert.ok(appSource.includes("navigator.clipboard.writeText"), "Result share should fall back to copying text");

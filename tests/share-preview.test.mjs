@@ -46,9 +46,15 @@ for (const imagePath of resultImagePaths) {
 for (const page of sharePages) {
   assert.ok(existsSync(page.path), `${page.path} should exist as a static share page`);
   const pageSource = readFileSync(page.path, "utf8");
-  assert.ok(pageSource.includes(`property="og:title" content="친구의 리더십 방향은 ${page.name}"`), `${page.name} page should have a result-specific OG title`);
+  assert.ok(pageSource.includes('property="og:title" content="나의 리더십 방향은?"'), `${page.name} page should keep the common OG title`);
+  assert.ok(
+    pageSource.includes('property="og:description" content="8개의 선택이 가리킨 리더십 방향을 확인하고, 나의 방향도 알아보세요."'),
+    `${page.name} page should have the shared OG description`,
+  );
   assert.ok(pageSource.includes(`property="og:image" content="${page.image}"`), `${page.name} page should have a result-specific OG image`);
+  assert.ok(pageSource.includes('name="twitter:title" content="나의 리더십 방향은?"'), `${page.name} page should keep the common Twitter title`);
   assert.ok(pageSource.includes(`name="twitter:image" content="${page.image}"`), `${page.name} page should have a result-specific Twitter image`);
+  assert.ok(pageSource.includes("공유된 리더십 방향은"), `${page.name} page should use neutral page wording`);
   assert.ok(pageSource.includes("나도 테스트 해보기"), `${page.name} page should invite visitors to take the test`);
   assert.ok(pageSource.includes("../.."), `${page.name} page should link back to the main test`);
 }

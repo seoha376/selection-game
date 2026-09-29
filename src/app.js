@@ -52,7 +52,7 @@ const COMPASS_POINTS = [
 ];
 
 function createShareText(result) {
-  return `내 리더십 방향은 ${result.name}.\n친구의 결과를 확인하고, 너도 테스트해봐.`;
+  return `내 리더십 방향은 ${result.name}.\n당신의 방향도 한번 확인해보세요!`;
 }
 
 function createShareUrl(result) {
@@ -341,7 +341,7 @@ function renderSharedResult() {
           <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
         </div>
         <div class="result-identity">
-          <p class="result-code">친구의 리더십 방향은</p>
+          <p class="result-code">공유된 리더십 방향은</p>
           <h2>${result.name}</h2>
           <p class="result-lead">${visual.lead}</p>
           <p class="catchphrase">${result.catchphrase}</p>
