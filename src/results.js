@@ -318,7 +318,7 @@ export function calculateResult(answers) {
     scores,
     scoreSummary: sortedScores,
     answers: interpretedAnswers,
-    compassSummary: `${result.name}의 방향은 ${result.compassLabel} 쪽에 닿아 있습니다. 숫자로 줄 세우기보다, 당신의 선택이 자주 향한 태도를 하나의 방향으로 읽어낸 결과입니다.`,
+    compassSummary: `${result.name}의 방향은 ${result.compassLabel} 쪽에 닿아 있습니다. 당신의 선택이 자주 향한 태도를 하나의 방향으로 읽어낸 결과입니다.`,
   };
 }
 
