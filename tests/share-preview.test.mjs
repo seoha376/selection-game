@@ -11,11 +11,46 @@ const resultImagePaths = [
   "assets/result-value.png",
   "assets/result-change.png",
 ];
+const sharePages = [
+  {
+    path: "share/execution/index.html",
+    route: "/share/execution/",
+    name: "실행 추진형",
+    image: "https://seoha376.github.io/selection-game/assets/result-execution.png",
+  },
+  {
+    path: "share/people/index.html",
+    route: "/share/people/",
+    name: "사람 연결형",
+    image: "https://seoha376.github.io/selection-game/assets/result-people.png",
+  },
+  {
+    path: "share/value/index.html",
+    route: "/share/value/",
+    name: "가치 중심형",
+    image: "https://seoha376.github.io/selection-game/assets/result-value.png",
+  },
+  {
+    path: "share/change/index.html",
+    route: "/share/change/",
+    name: "변화 개척형",
+    image: "https://seoha376.github.io/selection-game/assets/result-change.png",
+  },
+];
 
 assert.ok(existsSync("assets/og-image.png"), "Representative image should be available at assets/og-image.png");
 assert.ok(existsSync("assets/selection-game-qr.png"), "Printable QR image should be available at assets/selection-game-qr.png");
 for (const imagePath of resultImagePaths) {
   assert.ok(existsSync(imagePath), `${imagePath} should be available for result pages`);
+}
+for (const page of sharePages) {
+  assert.ok(existsSync(page.path), `${page.path} should exist as a static share page`);
+  const pageSource = readFileSync(page.path, "utf8");
+  assert.ok(pageSource.includes(`property="og:title" content="친구의 리더십 방향은 ${page.name}"`), `${page.name} page should have a result-specific OG title`);
+  assert.ok(pageSource.includes(`property="og:image" content="${page.image}"`), `${page.name} page should have a result-specific OG image`);
+  assert.ok(pageSource.includes(`name="twitter:image" content="${page.image}"`), `${page.name} page should have a result-specific Twitter image`);
+  assert.ok(pageSource.includes("나도 테스트 해보기"), `${page.name} page should invite visitors to take the test`);
+  assert.ok(pageSource.includes("../.."), `${page.name} page should link back to the main test`);
 }
 
 assert.ok(indexSource.includes("<title>나의 리더십 방향은?</title>"), "Title should be share-ready");
@@ -33,6 +68,10 @@ assert.ok(indexSource.includes(`name="twitter:image" content="${ogImageUrl}"`), 
 
 assert.ok(buildSource.includes('"/assets/og-image.png"'), "Build output should route the OG image asset");
 assert.ok(buildSource.includes('"/assets/selection-game-qr.png"'), "Build output should route the QR image asset");
+for (const page of sharePages) {
+  assert.ok(buildSource.includes(`"${page.route}"`), `${page.route} should be routed by the build output`);
+  assert.ok(buildSource.includes(`readFileSync("${page.path}"`), `${page.path} should be included in the build output`);
+}
 for (const imagePath of resultImagePaths) {
   assert.ok(buildSource.includes(`"/${imagePath}"`), `${imagePath} should be routed by the build output`);
   assert.ok(buildSource.includes(`readFileSync("${imagePath}")`), `${imagePath} should be read as bytes`);

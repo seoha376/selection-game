@@ -25,7 +25,8 @@ assert.ok(appSource.includes("option-choice-text"), "Option cards should separat
 assert.ok(!appSource.includes("選"), "Option cards should not use decorative hanja");
 assert.ok(appSource.includes("createShareText"), "Result screen should build a result-specific share message");
 assert.ok(appSource.includes("createShareUrl"), "Result share should create a result-specific URL");
-assert.ok(appSource.includes("#/share/"), "Result share URLs should open the friend result page");
+assert.ok(appSource.includes("/share/"), "Result share URLs should open static friend result pages");
+assert.ok(!appSource.includes("`${SITE_URL}#/share/"), "Result share should not use hash URLs for social previews");
 assert.ok(appSource.includes("renderSharedResult"), "App should render a shared friend result page");
 assert.ok(appSource.includes("친구의 리더십 방향은"), "Shared result page should frame the friend's result");
 assert.ok(appSource.includes("나도 테스트 해보기"), "Shared result page should invite friends to take the test");

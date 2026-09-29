@@ -38,6 +38,12 @@ const RESULT_IMAGES = {
   VALUE: "./assets/result-value.png",
   CHANGE: "./assets/result-change.png",
 };
+const SHARE_SLUGS = {
+  EXECUTION: "execution",
+  PEOPLE: "people",
+  VALUE: "value",
+  CHANGE: "change",
+};
 const COMPASS_POINTS = [
   { code: "EXECUTION", label: "움직임" },
   { code: "PEOPLE", label: "연결" },
@@ -50,7 +56,7 @@ function createShareText(result) {
 }
 
 function createShareUrl(result) {
-  return `${SITE_URL}#/share/${result.code}`;
+  return `${SITE_URL}share/${SHARE_SLUGS[result.code]}/`;
 }
 
 function createStateFromHash(hash) {

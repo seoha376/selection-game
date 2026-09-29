@@ -26,6 +26,38 @@ const sourceFiles = {
     contentType: "text/javascript; charset=utf-8",
     body: readFileSync("src/analytics.js", "utf8"),
   },
+  "/share/execution/": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/execution/index.html", "utf8"),
+  },
+  "/share/execution/index.html": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/execution/index.html", "utf8"),
+  },
+  "/share/people/": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/people/index.html", "utf8"),
+  },
+  "/share/people/index.html": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/people/index.html", "utf8"),
+  },
+  "/share/value/": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/value/index.html", "utf8"),
+  },
+  "/share/value/index.html": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/value/index.html", "utf8"),
+  },
+  "/share/change/": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/change/index.html", "utf8"),
+  },
+  "/share/change/index.html": {
+    contentType: "text/html; charset=utf-8",
+    body: readFileSync("share/change/index.html", "utf8"),
+  },
 };
 
 const binaryFiles = {
