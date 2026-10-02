@@ -255,7 +255,11 @@ function renderResult() {
   const result = calculateResult(state.answers);
   const visual = RESULT_VISUALS[result.code];
   const imageSrc = RESULT_IMAGES[result.code];
-  const description = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
+  const keywordChips = result.keywords
+    .split(" · ")
+    .map((keyword) => `<span>${keyword}</span>`)
+    .join("");
+  const summaryLines = result.description.map((sentence) => `<p>${sentence}</p>`).join("");
   const compassPoints = COMPASS_POINTS.map(
     (point) => `
       <li class="compass-point" data-active="${point.code === result.code}">
@@ -264,28 +268,45 @@ function renderResult() {
     `,
   ).join("");
   const expandedSections = result.expandedSections
-    .map(
-      (section) => `
-        <section class="expanded-section">
-          <h3>${section.title}</h3>
-          <p>${section.body}</p>
+    .map((section, index) => {
+      const isOpen = index === 0;
+
+      return `
+        <section class="result-accordion" data-open="${isOpen}">
+          <button class="result-accordion-toggle" type="button" aria-expanded="${isOpen}">
+            <span>${section.title}</span>
+            <span class="accordion-icon" aria-hidden="true">${isOpen ? "−" : "+"}</span>
+          </button>
+          <div class="result-accordion-body" ${isOpen ? "" : "hidden"}>
+            <p>${section.body}</p>
+          </div>
         </section>
-      `,
-    )
+      `;
+    })
     .join("");
 
   setScreen(`
     <section class="result-card paper-panel" data-result="${result.code}">
-      <div class="result-hero">
-        <div class="result-image-wrap">
-          <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
+      <div class="result-profile-shell">
+        <p class="result-kicker">나의 리더십 방향은?</p>
+        <div class="result-hero">
+          <div class="result-image-wrap">
+            <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
+          </div>
+          <div class="result-identity">
+            <p class="result-code">나의 리더십 방향은</p>
+            <h2>${result.name}</h2>
+            <p class="result-lead">${visual.lead}</p>
+            <p class="catchphrase">${result.catchphrase}</p>
+            <div class="keyword-chips" aria-label="결과 키워드">${keywordChips}</div>
+          </div>
         </div>
-        <div class="result-identity">
-          <p class="result-code">나의 리더십 방향은</p>
-          <h2>${result.name}</h2>
-          <p class="result-lead">${visual.lead}</p>
-          <p class="catchphrase">${result.catchphrase}</p>
-          <p class="keywords">${result.keywords}</p>
+        <div class="result-summary-card">
+          <div class="summary-icon" aria-hidden="true">✦</div>
+          <div>
+            <h3>당신은 이런 사람에 가까워요</h3>
+            ${summaryLines}
+          </div>
         </div>
       </div>
       <div class="reason-box">
@@ -293,12 +314,21 @@ function renderResult() {
         <p>${result.compassSummary}</p>
         <ul class="leadership-compass" aria-label="리더십 방향 나침반">${compassPoints}</ul>
       </div>
-      <div class="description">${description}</div>
       <div class="expanded-results">${expandedSections}</div>
       <section class="stats-box" aria-label="참여 통계">
         <h3>참여 현황</h3>
         <div id="stats-panel">
           <p class="stats-empty">참여 통계를 불러오는 중입니다.</p>
+        </div>
+      </section>
+      <section class="share-preview-card" aria-label="공유 카드 미리보기">
+        <div class="share-preview-image">
+          <img src="${imageSrc}" alt="" />
+        </div>
+        <div class="share-preview-copy">
+          <p>공유 카드</p>
+          <h3>${result.name}</h3>
+          <span>${result.catchphrase}</span>
         </div>
       </section>
       <div class="share-actions">
@@ -318,6 +348,20 @@ function renderResult() {
     state = createGameState();
     syncRoute();
     render();
+  });
+
+  document.querySelectorAll(".result-accordion-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const card = button.closest(".result-accordion");
+      const body = card.querySelector(".result-accordion-body");
+      const icon = card.querySelector(".accordion-icon");
+      const isOpen = button.getAttribute("aria-expanded") === "true";
+
+      button.setAttribute("aria-expanded", String(!isOpen));
+      card.dataset.open = String(!isOpen);
+      body.hidden = isOpen;
+      icon.textContent = isOpen ? "+" : "−";
+    });
   });
 
   document.querySelector("#share-button").addEventListener("click", () => {

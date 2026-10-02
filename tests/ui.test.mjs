@@ -7,6 +7,11 @@ const styles = readFileSync("src/styles.css", "utf8");
 
 assert.ok(appSource.includes('data-result="${result.code}"'), "Result card should expose the result code to CSS");
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
+assert.ok(appSource.includes("result-summary-card"), "Result screen should surface a compact summary card");
+assert.ok(appSource.includes("result-accordion"), "Result details should be presented as expandable cards");
+assert.ok(appSource.includes("const isOpen = index === 0"), "The first result detail card should be open by default");
+assert.ok(appSource.includes('aria-expanded="${isOpen}"'), "Expandable result cards should expose their open state");
+assert.ok(appSource.includes("share-preview-card"), "Result screen should show a visual share-card preview");
 assert.ok(!appSource.includes("result-symbol"), "Result screen should not show a large hanja symbol");
 assert.ok(!appSource.includes('<p class="result-code">${result.code}</p>'), "Result screen should not expose English result codes");
 assert.ok(appSource.includes("RESULT_IMAGES"), "Result screens should map each type to a visual image");
@@ -42,6 +47,11 @@ for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(styles.includes(`.result-card[data-result="${code}"]`), `${code} should have a result-specific theme`);
 }
 assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
+assert.ok(styles.includes(".result-profile-shell"), "Result profile shell should create a dense rewarded layout");
+assert.ok(styles.includes(".result-summary-card"), "Result summary card should be styled");
+assert.ok(styles.includes(".result-accordion"), "Expandable result cards should be styled");
+assert.ok(styles.includes(".result-accordion-body"), "Expandable result card bodies should be styled");
+assert.ok(styles.includes(".share-preview-card"), "Share preview card should be styled");
 assert.ok(styles.includes(".result-image-wrap"), "Result image wrapper should be styled");
 assert.ok(styles.includes(".result-image"), "Result images should be styled");
 assert.ok(!styles.includes(".result-symbol"), "Large hanja symbol styling should be removed");
