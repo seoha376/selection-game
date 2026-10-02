@@ -10,8 +10,8 @@ import {
   revealResult,
   selectAnswer as selectGameAnswer,
   startGame,
-} from "./results.js?v=6";
-import { createAnalyticsClient } from "./analytics.js?v=6";
+} from "./results.js?v=7";
+import { createAnalyticsClient } from "./analytics.js?v=7";
 
 let state = createGameState();
 const app = document.querySelector("#app");

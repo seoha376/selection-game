@@ -4,6 +4,12 @@ import { readFileSync } from "node:fs";
 const appSource = readFileSync("src/app.js", "utf8");
 const resultsSource = readFileSync("src/results.js", "utf8");
 const styles = readFileSync("src/styles.css", "utf8");
+const indexHtml = readFileSync("index.html", "utf8");
+
+assert.ok(indexHtml.includes('./src/styles.css?v=7'), "Stylesheet should use a fresh cache-busting version");
+assert.ok(indexHtml.includes('./src/app.js?v=7'), "App script should use a fresh cache-busting version");
+assert.ok(appSource.includes('./results.js?v=7'), "App should import the current results module version");
+assert.ok(appSource.includes('./analytics.js?v=7'), "App should import the current analytics module version");
 
 assert.ok(appSource.includes('data-result="${result.code}"'), "Result card should expose the result code to CSS");
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
