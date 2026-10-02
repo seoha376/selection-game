@@ -174,13 +174,17 @@ async function shareResult(result) {
 function renderCover() {
   setScreen(`
     <section class="cover-screen paper-panel">
+      <div class="travel-sticker sticker-plane" aria-hidden="true">✈</div>
+      <div class="travel-sticker sticker-leaf" aria-hidden="true">🍁</div>
+      <div class="travel-sticker sticker-stamp" aria-hidden="true">WORLD TOUR</div>
+      <span class="tag-hole" aria-hidden="true"></span>
       <p class="eyebrow">김구 탄생 150주년 기념 체험</p>
-      <h1>나의 선택으로<br />리더십 방향</h1>
+      <h1><span>월드투어에서 발견하는</span><br />나의 리더십</h1>
       <p class="cover-copy">
-        백범 김구의 삶에서 떠올릴 수 있는 결정, 사람, 가치, 변화의 감각을 가볍게 체험해보는 행사형 테스트입니다.
+        8개의 선택을 따라가며 내 안의 결정, 사람, 가치, 변화 감각을 찾아보는 월드투어형 리더십 테스트입니다.
       </p>
       <p class="notice">본 테스트는 의학적·심리학적 진단 도구가 아니며, 행사 참여를 위한 체험 콘텐츠입니다. 참여 흐름과 결과는 익명 통계로 저장될 수 있습니다.</p>
-      <button id="start-button" class="primary-button" type="button">시작하기</button>
+      <button id="start-button" class="primary-button" type="button">리더십 태그 찾기</button>
     </section>
   `);
 
@@ -208,6 +212,8 @@ function renderQuestion() {
         </div>
       </div>
       <section class="question paper-panel" aria-label="선택 질문">
+        <span class="tag-hole" aria-hidden="true"></span>
+        <div class="travel-sticker sticker-ticket" aria-hidden="true">CHECKPOINT</div>
         <p class="question-number">Q${state.currentQuestionIndex + 1}</p>
         <h2>${question.title}</h2>
         <div class="options">
@@ -288,13 +294,15 @@ function renderResult() {
   setScreen(`
     <section class="result-card paper-panel" data-result="${result.code}">
       <div class="result-profile-shell">
-        <p class="result-kicker">나의 리더십 방향은?</p>
+        <div class="travel-sticker sticker-ticket" aria-hidden="true">LEADERSHIP TAG</div>
+        <span class="tag-hole" aria-hidden="true"></span>
+        <p class="result-kicker">월드투어에서 발견한</p>
         <div class="result-hero">
           <div class="result-image-wrap">
             <img class="result-image" src="${imageSrc}" alt="${result.name} 상징 이미지" />
           </div>
           <div class="result-identity">
-            <p class="result-code">나의 리더십 방향은</p>
+            <p class="result-code">나의 리더십 태그</p>
             <h2>${result.name}</h2>
             <p class="result-lead">${visual.lead}</p>
             <p class="catchphrase">${result.catchphrase}</p>

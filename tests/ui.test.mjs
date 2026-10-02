@@ -7,6 +7,9 @@ const styles = readFileSync("src/styles.css", "utf8");
 
 assert.ok(appSource.includes('data-result="${result.code}"'), "Result card should expose the result code to CSS");
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
+assert.ok(appSource.includes("월드투어에서 발견하는"), "Cover should match the world-tour poster language");
+assert.ok(appSource.includes("나의 리더십 태그"), "Result screen should use the luggage-tag leadership framing");
+assert.ok(appSource.includes("travel-sticker"), "Screens should include travel-sticker decorations");
 assert.ok(appSource.includes("result-summary-card"), "Result screen should surface a compact summary card");
 assert.ok(appSource.includes("result-accordion"), "Result details should be presented as expandable cards");
 assert.ok(appSource.includes("const isOpen = index === 0"), "The first result detail card should be open by default");
@@ -47,6 +50,11 @@ for (const code of ["EXECUTION", "PEOPLE", "VALUE", "CHANGE"]) {
   assert.ok(styles.includes(`.result-card[data-result="${code}"]`), `${code} should have a result-specific theme`);
 }
 assert.ok(styles.includes(".result-hero"), "Result hero should be styled");
+assert.ok(styles.includes("--sky-blue"), "Theme should include the poster-inspired sky palette");
+assert.ok(styles.includes("--suitcase-brown"), "Theme should include the suitcase travel palette");
+assert.ok(styles.includes("border-style: dashed"), "Cards should use luggage-tag dashed borders");
+assert.ok(styles.includes(".travel-sticker"), "Travel sticker decorations should be styled");
+assert.ok(styles.includes(".tag-hole"), "Luggage-tag cards should include tag-hole styling");
 assert.ok(styles.includes(".result-profile-shell"), "Result profile shell should create a dense rewarded layout");
 assert.ok(styles.includes(".result-summary-card"), "Result summary card should be styled");
 assert.ok(styles.includes(".result-accordion"), "Expandable result cards should be styled");
