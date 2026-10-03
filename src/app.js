@@ -10,8 +10,8 @@ import {
   revealResult,
   selectAnswer as selectGameAnswer,
   startGame,
-} from "./results.js?v=7";
-import { createAnalyticsClient } from "./analytics.js?v=7";
+} from "./results.js?v=8";
+import { createAnalyticsClient } from "./analytics.js?v=8";
 
 let state = createGameState();
 const app = document.querySelector("#app");
@@ -50,6 +50,8 @@ const COMPASS_POINTS = [
   { code: "VALUE", label: "기준" },
   { code: "CHANGE", label: "새로움" },
 ];
+const INSIGHT_LABELS = ["이런 순간에 빛나요", "사람들이 기억하는 나", "같이 가면 좋은 타입"];
+const INSIGHT_ICONS = ["🚩", "💬", "🎒"];
 
 function createShareText(result) {
   return `내 리더십 방향은 ${result.name}.\n당신의 방향도 한번 확인해보세요!`;
@@ -273,22 +275,30 @@ function renderResult() {
       </li>
     `,
   ).join("");
-  const expandedSections = result.expandedSections
-    .map((section, index) => {
-      const isOpen = index === 0;
-
-      return `
-        <section class="result-accordion" data-open="${isOpen}">
-          <button class="result-accordion-toggle" type="button" aria-expanded="${isOpen}">
-            <span>${section.title}</span>
-            <span class="accordion-icon" aria-hidden="true">${isOpen ? "−" : "+"}</span>
-          </button>
-          <div class="result-accordion-body" ${isOpen ? "" : "hidden"}>
+  const primaryInsightSections = result.expandedSections.slice(0, 3);
+  const bonusSections = result.expandedSections.slice(3);
+  const insightCards = primaryInsightSections
+    .map(
+      (section, index) => `
+        <button class="result-insight-card" type="button" data-insight-index="${index}" aria-expanded="${index === 0}">
+          <span class="insight-icon" aria-hidden="true">${INSIGHT_ICONS[index]}</span>
+          <span>${INSIGHT_LABELS[index]}</span>
+        </button>
+      `,
+    )
+    .join("");
+  const bonusStamps = bonusSections
+    .map(
+      (section) => `
+        <article class="bonus-stamp">
+          <span aria-hidden="true">✦</span>
+          <div>
+            <h4>${section.title}</h4>
             <p>${section.body}</p>
           </div>
-        </section>
-      `;
-    })
+        </article>
+      `,
+    )
     .join("");
 
   setScreen(`
@@ -317,12 +327,28 @@ function renderResult() {
           </div>
         </div>
       </div>
+      <div class="result-reward-stage">
+        <div class="result-postcard">
+          <img src="${imageSrc}" alt="" />
+          <p>생각을 행동으로,<br />지금 어디든 길을 만듭니다.</p>
+        </div>
+        <div class="result-insight-grid" aria-label="결과 상세 선택">
+          ${insightCards}
+        </div>
+        <section class="result-insight-panel" id="result-insight-panel" aria-live="polite">
+          <h3>${INSIGHT_LABELS[0]}</h3>
+          <p>${primaryInsightSections[0].body}</p>
+        </section>
+      </div>
       <div class="reason-box">
         <h3>당신의 선택은 이런 방향을 가리켜요</h3>
         <p>${result.compassSummary}</p>
         <ul class="leadership-compass" aria-label="리더십 방향 나침반">${compassPoints}</ul>
       </div>
-      <div class="expanded-results">${expandedSections}</div>
+      <section class="bonus-stamps" aria-label="보너스 스탬프">
+        <h3>보너스 스탬프</h3>
+        ${bonusStamps}
+      </section>
       <section class="stats-box" aria-label="참여 통계">
         <h3>참여 현황</h3>
         <div id="stats-panel">
@@ -358,17 +384,23 @@ function renderResult() {
     render();
   });
 
-  document.querySelectorAll(".result-accordion-toggle").forEach((button) => {
-    button.addEventListener("click", () => {
-      const card = button.closest(".result-accordion");
-      const body = card.querySelector(".result-accordion-body");
-      const icon = card.querySelector(".accordion-icon");
-      const isOpen = button.getAttribute("aria-expanded") === "true";
+  function setActiveInsight(nextIndex) {
+    const section = primaryInsightSections[nextIndex];
+    const panel = document.querySelector("#result-insight-panel");
 
-      button.setAttribute("aria-expanded", String(!isOpen));
-      card.dataset.open = String(!isOpen);
-      body.hidden = isOpen;
-      icon.textContent = isOpen ? "+" : "−";
+    document.querySelectorAll(".result-insight-card").forEach((button) => {
+      button.setAttribute("aria-expanded", String(Number(button.dataset.insightIndex) === nextIndex));
+    });
+
+    panel.innerHTML = `
+      <h3>${INSIGHT_LABELS[nextIndex]}</h3>
+      <p>${section.body}</p>
+    `;
+  }
+
+  document.querySelectorAll(".result-insight-card").forEach((button) => {
+    button.addEventListener("click", () => {
+      setActiveInsight(Number(button.dataset.insightIndex));
     });
   });
 

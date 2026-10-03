@@ -6,10 +6,10 @@ const resultsSource = readFileSync("src/results.js", "utf8");
 const styles = readFileSync("src/styles.css", "utf8");
 const indexHtml = readFileSync("index.html", "utf8");
 
-assert.ok(indexHtml.includes('./src/styles.css?v=7'), "Stylesheet should use a fresh cache-busting version");
-assert.ok(indexHtml.includes('./src/app.js?v=7'), "App script should use a fresh cache-busting version");
-assert.ok(appSource.includes('./results.js?v=7'), "App should import the current results module version");
-assert.ok(appSource.includes('./analytics.js?v=7'), "App should import the current analytics module version");
+assert.ok(indexHtml.includes('./src/styles.css?v=8'), "Stylesheet should use a fresh cache-busting version");
+assert.ok(indexHtml.includes('./src/app.js?v=8'), "App script should use a fresh cache-busting version");
+assert.ok(appSource.includes('./results.js?v=8'), "App should import the current results module version");
+assert.ok(appSource.includes('./analytics.js?v=8'), "App should import the current analytics module version");
 
 assert.ok(appSource.includes('data-result="${result.code}"'), "Result card should expose the result code to CSS");
 assert.ok(appSource.includes("result-hero"), "Result screen should have a strong hero area");
@@ -17,9 +17,11 @@ assert.ok(appSource.includes("월드투어에서 발견하는"), "Cover should m
 assert.ok(appSource.includes("나의 리더십 태그"), "Result screen should use the luggage-tag leadership framing");
 assert.ok(appSource.includes("travel-sticker"), "Screens should include travel-sticker decorations");
 assert.ok(appSource.includes("result-summary-card"), "Result screen should surface a compact summary card");
-assert.ok(appSource.includes("result-accordion"), "Result details should be presented as expandable cards");
-assert.ok(appSource.includes("const isOpen = index === 0"), "The first result detail card should be open by default");
-assert.ok(appSource.includes('aria-expanded="${isOpen}"'), "Expandable result cards should expose their open state");
+assert.ok(appSource.includes("primaryInsightSections"), "Result screen should split details into three main insight blocks");
+assert.ok(appSource.includes("result-insight-grid"), "Result screen should show three tappable result insight blocks");
+assert.ok(appSource.includes("result-insight-panel"), "Result screen should use a single expanded panel below the blocks");
+assert.ok(appSource.includes("bonus-stamps"), "Extra result details should move into bonus stamps");
+assert.ok(appSource.includes("setActiveInsight"), "Clicking an insight should close the previous detail and open the selected one");
 assert.ok(appSource.includes("share-preview-card"), "Result screen should show a visual share-card preview");
 assert.ok(!appSource.includes("result-symbol"), "Result screen should not show a large hanja symbol");
 assert.ok(!appSource.includes('<p class="result-code">${result.code}</p>'), "Result screen should not expose English result codes");
@@ -63,8 +65,11 @@ assert.ok(styles.includes(".travel-sticker"), "Travel sticker decorations should
 assert.ok(styles.includes(".tag-hole"), "Luggage-tag cards should include tag-hole styling");
 assert.ok(styles.includes(".result-profile-shell"), "Result profile shell should create a dense rewarded layout");
 assert.ok(styles.includes(".result-summary-card"), "Result summary card should be styled");
-assert.ok(styles.includes(".result-accordion"), "Expandable result cards should be styled");
-assert.ok(styles.includes(".result-accordion-body"), "Expandable result card bodies should be styled");
+assert.ok(styles.includes(".result-insight-grid"), "Three result insight blocks should be styled");
+assert.ok(styles.includes(".result-insight-card"), "Result insight cards should be styled");
+assert.ok(styles.includes(".result-insight-panel"), "Shared expanded result panel should be styled");
+assert.ok(styles.includes(".bonus-stamps"), "Bonus stamps should be styled");
+assert.ok(!styles.includes(".cover-screen::after"), "Ambiguous bottom-right suitcase blob should be removed");
 assert.ok(styles.includes(".share-preview-card"), "Share preview card should be styled");
 assert.ok(styles.includes(".result-image-wrap"), "Result image wrapper should be styled");
 assert.ok(styles.includes(".result-image"), "Result images should be styled");
